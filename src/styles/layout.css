@@ -159,10 +159,6 @@
   font-weight: 600;
 }
 
-img.ui-avatar {
-  object-fit: cover;
-}
-
 .header-avatar-button {
   padding: 0;
   overflow: hidden;
@@ -343,7 +339,7 @@ img.ui-avatar {
   width: min(360px, 100%);
 }
 
-.toolbar-search .ui-input {
+.toolbar-search input {
   padding-left: 36px;
 }
 

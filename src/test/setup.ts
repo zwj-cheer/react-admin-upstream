@@ -40,6 +40,6 @@ Object.defineProperty(globalThis, 'sessionStorage', {
 afterEach(() => {
   window.localStorage.clear()
   window.sessionStorage.clear()
-  document.documentElement.removeAttribute('data-theme')
+  document.documentElement.classList.remove('dark')
   document.documentElement.removeAttribute('lang')
 })

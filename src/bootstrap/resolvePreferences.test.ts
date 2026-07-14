@@ -45,7 +45,7 @@ describe('resolvePreferences', () => {
       locale: 'en-US',
     })
 
-    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
     expect(document.documentElement.lang).toBe('en-US')
   })
 })

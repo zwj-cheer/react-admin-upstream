@@ -24,7 +24,7 @@ function safePersist(preference: ThemePreference): void {
 }
 
 function applyResolvedTheme(resolved: ResolvedTheme): void {
-  document.documentElement.dataset.theme = resolved
+  document.documentElement.classList.toggle('dark', resolved === 'dark')
   document.documentElement.style.colorScheme = resolved
 }
 

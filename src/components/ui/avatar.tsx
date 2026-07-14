@@ -13,7 +13,7 @@ export function Avatar({ name, src, className, ...props }: AvatarProps) {
   if (src && !failed) {
     return (
       <img
-        className={cn('ui-avatar', className)}
+        className={cn('object-cover', className)}
         src={src}
         alt={name ?? ''}
         onError={() => setFailed(true)}
@@ -23,7 +23,7 @@ export function Avatar({ name, src, className, ...props }: AvatarProps) {
   }
 
   return (
-    <div className={cn('ui-avatar', className)} aria-label={name ?? undefined} {...props}>
+    <div className={className} aria-label={name ?? undefined} {...props}>
       {initial}
     </div>
   )

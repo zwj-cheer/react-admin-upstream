@@ -20,7 +20,7 @@ body {
     sans-serif;
 }
 
-[data-theme='dark'] body {
+.dark body {
   background: #0c1222;
   color: #f1f5f9;
 }
@@ -36,7 +36,7 @@ body {
   text-align: center;
 }
 
-[data-theme='dark'] .bootstrap-error {
+.dark .bootstrap-error {
   border-color: #1e2d3d;
   background: #151d2d;
 }

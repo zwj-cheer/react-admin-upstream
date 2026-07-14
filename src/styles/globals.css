@@ -6,7 +6,7 @@
 @import './layout.css';
 @import './responsive.css';
 
-@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--bg);

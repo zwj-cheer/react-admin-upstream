@@ -42,8 +42,15 @@
    `src/adapters/rest/*Adapter.ts` 文件里并从那里导出，不建集中式类型文件；真正跨资源共享的
    Zod schema 放 `src/adapters/rest/schemas.ts`；服务契约在 `src/core/services/contracts.ts`。
    详见 `api-type-colocation` skill。
-2. **主题体系以 CSS 变量为唯一真相**：设计令牌集中在 `src/styles/tokens.css`；组件样式通过
-   `ui-*` class 挂到令牌上；项目侧覆盖只写 `src/project/styles.css`，不要在组件里硬编码颜色。
+2. **主题体系以 CSS 变量为唯一真相，并按 shadcn 官方标准以 `.dark` 类切换**：设计令牌集中在
+   `src/styles/tokens.css`，浅色挂在 `:root`、深色挂在 `.dark`（Tailwind 的 `dark:` variant
+   经 `globals.css` 的 `@custom-variant dark (&:is(.dark *))` 生效）；切换只在
+   `<html>` 上增删 `dark` 类（见 `themeStore.ts` / `resolvePreferences.ts`），禁止再用
+   `[data-theme]` 属性；`src/components/ui/` 的组件按 shadcn 官方形态用 cva + 内联 Tailwind
+   工具类实现，颜色一律引用令牌（`bg-[var(--gold)]`、`text-[var(--t1)]` 等），变体用
+   `class-variance-authority` 定义（见 `button.tsx`）；应用级样式（`.card`、`.data-table`
+   等）仍走 `src/styles/*.css` 语义类并挂到令牌；项目侧覆盖只写 `src/project/styles.css`，
+   任何位置都不要硬编码 hex/rgb 颜色。
 3. **Radix 的 `asChild` 不兼容 NavLink 函数型 className**（会被强转成字符串）。active 态用
    `useLocation` 手动计算后传普通字符串。
 4. **自定义/扩展组件的 props 逐项写中文 JSDoc**：抽显式 `XxxProps` 并 `export`，写清作用、
@@ -68,7 +75,7 @@
     `en-US.json`（两个文件的键结构必须保持一致，缺一个即视为未完成）。aria-label、placeholder、
     toast、错误提示同样适用。
 11. **新增 UI 必须同时适配三种主题模式**（light/dark/system）：颜色只能引用
-    `src/styles/tokens.css` 中的设计令牌（含 `[data-theme="dark"]` 深色套），不允许写死
+    `src/styles/tokens.css` 中的设计令牌（含 `.dark` 深色套），不允许写死
     hex/rgb 颜色值。交付前在浅色和深色下都实际看过，视觉用例覆盖的页面需确认基线仍通过。
 12. **移动端适配按「项目能力配置」表执行**：当前值为「需要」，新增页面必须在
     1440×900 / 768×1024 / 390×844 三档视口下可用并通过对应视觉基线；不得在单个页面里

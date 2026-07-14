@@ -100,7 +100,7 @@
     gap: 10px;
   }
 
-  .dialog-content {
+  [data-slot='dialog-content'] {
     top: auto;
     bottom: 0;
     left: 0;
@@ -159,7 +159,7 @@
     width: 100%;
   }
 
-  .page-toolbar > .ui-button {
+  .page-toolbar > button {
     width: 100%;
   }
 

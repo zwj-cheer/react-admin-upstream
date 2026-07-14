@@ -35,7 +35,7 @@ export function resolvePreferences(config: RuntimeConfig): ResolvedPreferences {
 }
 
 export function applyPreferences(preferences: ResolvedPreferences): void {
-  document.documentElement.dataset.theme = preferences.theme.resolved
+  document.documentElement.classList.toggle('dark', preferences.theme.resolved === 'dark')
   document.documentElement.lang = preferences.locale
   document.documentElement.style.colorScheme = preferences.theme.resolved
 }
