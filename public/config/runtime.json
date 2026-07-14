@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Admin Workspace"
+  },
+  "api": {
+    "baseUrl": "/api",
+    "timeoutMs": 10000
+  },
+  "auth": {
+    "mode": "local",
+    "local": {
+      "csrfHeaderName": "x-csrf-token"
+    },
+    "oidc": {
+      "authority": "https://id.example.com",
+      "clientId": "replace-with-public-client-id",
+      "redirectPath": "/auth/callback",
+      "postLogoutRedirectPath": "/login",
+      "scope": "openid profile email"
+    }
+  },
+  "defaults": {
+    "theme": "system",
+    "locale": "zh-CN"
+  },
+  "ui": {
+    "accountMenu": {
+      "sidebar": true,
+      "header": false
+    }
+  },
+  "mock": {
+    "enabled": true
+  }
+}

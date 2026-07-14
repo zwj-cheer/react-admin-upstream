@@ -1,0 +1,4 @@
+interface:
+  display_name: "同步代理 Skills"
+  short_description: "同步 Claude 和 Gemini 的 skill 软链接"
+  default_prompt: "使用 $sync-agent-skills 同步本项目 Claude 和 Gemini 的 skill 入口。"

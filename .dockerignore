@@ -1,0 +1,10 @@
+.git
+.github
+.reference
+dist
+node_modules
+playwright-report
+test-results
+coverage
+docs/brainstorms
+docs/plans

@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './tokens.css';
+@import './base.css';
+@import './components.css';
+@import './layout.css';
+@import './responsive.css';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--t1);
+  --color-card: var(--card);
+  --color-primary: var(--gold);
+  --color-border: var(--border);
+  --color-muted: var(--t3);
+  --font-sans: 'Geist', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+}

@@ -1,0 +1,128 @@
+{
+  "app": {
+    "name": "管理工作台",
+    "loading": "正在初始化应用"
+  },
+  "errors": {
+    "notFoundTitle": "页面不存在",
+    "notFoundBody": "请求的路由未被当前前端注册。",
+    "backToApp": "返回应用"
+  },
+  "common": {
+    "add": "新建",
+    "edit": "编辑",
+    "delete": "删除",
+    "cancel": "取消",
+    "save": "保存",
+    "confirm": "确认",
+    "search": "搜索",
+    "status": "状态",
+    "enabled": "启用",
+    "disabled": "停用",
+    "actions": "操作",
+    "loading": "加载中…",
+    "empty": "暂无数据",
+    "retry": "重试",
+    "previous": "上一页",
+    "next": "下一页",
+    "name": "名称",
+    "email": "邮箱",
+    "code": "编码",
+    "description": "说明",
+    "roles": "角色",
+    "permissions": "权限",
+    "createdAt": "创建时间",
+    "parent": "上级菜单",
+    "route": "前端路由",
+    "icon": "图标",
+    "order": "排序",
+    "loadFailed": "数据加载失败",
+    "operationSuccess": "操作已完成",
+    "operationFailed": "操作失败，请重试",
+    "confirmDelete": "确认删除",
+    "confirmDeleteHint": "删除后无法恢复，请确认当前对象不再使用。",
+    "rootMenu": "顶级菜单"
+  },
+  "nav": {
+    "system": "系统管理",
+    "users": "用户管理",
+    "roles": "角色管理",
+    "menus": "菜单管理"
+  },
+  "a11y": {
+    "openNavigation": "打开导航菜单",
+    "primaryNavigation": "主导航",
+    "switchLanguage": "切换语言",
+    "userMenu": "用户菜单",
+    "themeLight": "切换主题：当前为浅色",
+    "themeDark": "切换主题：当前为深色",
+    "themeSystem": "跟随系统主题"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "管理外观与语言偏好",
+    "theme": "主题",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "themeSystem": "跟随系统",
+    "language": "语言"
+  },
+  "auth": {
+    "title": "登录管理工作台",
+    "subtitle": "使用本地账号或组织身份登录",
+    "email": "邮箱",
+    "password": "密码",
+    "localLogin": "账号密码登录",
+    "oidcLogin": "使用组织账号登录",
+    "logout": "退出登录",
+    "demoHint": "开发环境已启用 Mock 登录",
+    "restoring": "正在恢复会话…",
+    "failed": "登录失败，请检查凭据后重试",
+    "callbackFailed": "组织登录未完成，请重新发起登录",
+    "noPermission": "当前账号没有可访问的功能",
+    "noPermissionHint": "请联系管理员分配至少一个应用权限。"
+  },
+  "users": {
+    "title": "用户管理",
+    "subtitle": "管理账号、状态与角色分配",
+    "searchPlaceholder": "搜索姓名或邮箱",
+    "newTitle": "新建用户",
+    "editTitle": "编辑用户",
+    "roleTitle": "分配用户角色"
+  },
+  "roles": {
+    "title": "角色管理",
+    "subtitle": "维护角色和菜单操作权限",
+    "searchPlaceholder": "搜索角色名称或编码",
+    "newTitle": "新建角色",
+    "editTitle": "编辑角色",
+    "permissionTitle": "配置角色权限",
+    "userCount": "用户数"
+  },
+  "menus": {
+    "title": "菜单管理",
+    "subtitle": "维护已注册菜单的显示、状态与顺序",
+    "newTitle": "新建菜单",
+    "editTitle": "编辑菜单",
+    "unknownRoute": "未注册路由"
+  },
+  "permissions": {
+    "usersRead": "查看用户",
+    "usersCreate": "新建用户",
+    "usersUpdate": "编辑用户",
+    "usersToggle": "启停用户",
+    "usersAssignRole": "分配用户角色",
+    "rolesRead": "查看角色",
+    "rolesCreate": "新建角色",
+    "rolesUpdate": "编辑角色",
+    "rolesDelete": "删除角色",
+    "rolesToggle": "启停角色",
+    "rolesPermissions": "配置角色权限",
+    "menusRead": "查看菜单",
+    "menusCreate": "新建菜单",
+    "menusUpdate": "编辑菜单",
+    "menusDelete": "删除菜单",
+    "menusToggle": "启停菜单",
+    "menusOrder": "调整菜单排序"
+  }
+}

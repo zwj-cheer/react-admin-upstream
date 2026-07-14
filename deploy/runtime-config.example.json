@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Admin Workspace"
+  },
+  "api": {
+    "baseUrl": "/api",
+    "timeoutMs": 10000
+  },
+  "auth": {
+    "mode": "local",
+    "local": {
+      "csrfHeaderName": "x-csrf-token"
+    }
+  },
+  "defaults": {
+    "theme": "system",
+    "locale": "zh-CN"
+  },
+  "ui": {
+    "accountMenu": {
+      "sidebar": true,
+      "header": false
+    }
+  },
+  "mock": {
+    "enabled": false
+  }
+}

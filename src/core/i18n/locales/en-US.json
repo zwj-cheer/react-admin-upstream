@@ -1,0 +1,128 @@
+{
+  "app": {
+    "name": "Admin Workspace",
+    "loading": "Initializing application"
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The requested route is not registered by this frontend.",
+    "backToApp": "Back to application"
+  },
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "search": "Search",
+    "status": "Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "actions": "Actions",
+    "loading": "Loading…",
+    "empty": "No data",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "name": "Name",
+    "email": "Email",
+    "code": "Code",
+    "description": "Description",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "createdAt": "Created",
+    "parent": "Parent menu",
+    "route": "Frontend route",
+    "icon": "Icon",
+    "order": "Order",
+    "loadFailed": "Failed to load data",
+    "operationSuccess": "Operation completed",
+    "operationFailed": "Operation failed. Try again.",
+    "confirmDelete": "Confirm deletion",
+    "confirmDeleteHint": "This cannot be undone. Make sure the item is no longer in use.",
+    "rootMenu": "Top level"
+  },
+  "nav": {
+    "system": "System",
+    "users": "Users",
+    "roles": "Roles",
+    "menus": "Menus"
+  },
+  "a11y": {
+    "openNavigation": "Open navigation",
+    "primaryNavigation": "Primary navigation",
+    "switchLanguage": "Switch language",
+    "userMenu": "User menu",
+    "themeLight": "Switch theme: light",
+    "themeDark": "Switch theme: dark",
+    "themeSystem": "Switch theme: system"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage appearance and language preferences",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language"
+  },
+  "auth": {
+    "title": "Sign in to Admin Workspace",
+    "subtitle": "Use a local account or your organization identity",
+    "email": "Email",
+    "password": "Password",
+    "localLogin": "Sign in with password",
+    "oidcLogin": "Sign in with organization",
+    "logout": "Sign out",
+    "demoHint": "Mock sign-in is enabled for development",
+    "restoring": "Restoring session…",
+    "failed": "Sign-in failed. Check your credentials and try again.",
+    "callbackFailed": "Organization sign-in did not complete. Start again.",
+    "noPermission": "This account has no accessible features",
+    "noPermissionHint": "Ask an administrator to assign at least one application permission."
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Manage accounts, status, and role assignments",
+    "searchPlaceholder": "Search name or email",
+    "newTitle": "Add user",
+    "editTitle": "Edit user",
+    "roleTitle": "Assign user roles"
+  },
+  "roles": {
+    "title": "Roles",
+    "subtitle": "Maintain roles and menu/action permissions",
+    "searchPlaceholder": "Search role name or code",
+    "newTitle": "Add role",
+    "editTitle": "Edit role",
+    "permissionTitle": "Configure role permissions",
+    "userCount": "Users"
+  },
+  "menus": {
+    "title": "Menus",
+    "subtitle": "Maintain registered menu visibility, status, and order",
+    "newTitle": "Add menu",
+    "editTitle": "Edit menu",
+    "unknownRoute": "Unregistered route"
+  },
+  "permissions": {
+    "usersRead": "View users",
+    "usersCreate": "Create users",
+    "usersUpdate": "Edit users",
+    "usersToggle": "Enable or disable users",
+    "usersAssignRole": "Assign user roles",
+    "rolesRead": "View roles",
+    "rolesCreate": "Create roles",
+    "rolesUpdate": "Edit roles",
+    "rolesDelete": "Delete roles",
+    "rolesToggle": "Enable or disable roles",
+    "rolesPermissions": "Configure role permissions",
+    "menusRead": "View menus",
+    "menusCreate": "Create menus",
+    "menusUpdate": "Edit menus",
+    "menusDelete": "Delete menus",
+    "menusToggle": "Enable or disable menus",
+    "menusOrder": "Reorder menus"
+  }
+}

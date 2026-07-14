@@ -1,0 +1,45 @@
+export const capabilities = {
+  users: {
+    read: 'users:read',
+    create: 'users:create',
+    update: 'users:update',
+    toggle: 'users:toggle',
+    assignRole: 'users:assign-role',
+  },
+  roles: {
+    read: 'roles:read',
+    create: 'roles:create',
+    update: 'roles:update',
+    remove: 'roles:delete',
+    toggle: 'roles:toggle',
+    permissions: 'roles:permissions',
+  },
+  menus: {
+    read: 'menus:read',
+    create: 'menus:create',
+    update: 'menus:update',
+    remove: 'menus:delete',
+    toggle: 'menus:toggle',
+    order: 'menus:order',
+  },
+} as const
+
+export const capabilityCatalog = [
+  { key: capabilities.users.read, labelKey: 'permissions.usersRead' },
+  { key: capabilities.users.create, labelKey: 'permissions.usersCreate' },
+  { key: capabilities.users.update, labelKey: 'permissions.usersUpdate' },
+  { key: capabilities.users.toggle, labelKey: 'permissions.usersToggle' },
+  { key: capabilities.users.assignRole, labelKey: 'permissions.usersAssignRole' },
+  { key: capabilities.roles.read, labelKey: 'permissions.rolesRead' },
+  { key: capabilities.roles.create, labelKey: 'permissions.rolesCreate' },
+  { key: capabilities.roles.update, labelKey: 'permissions.rolesUpdate' },
+  { key: capabilities.roles.remove, labelKey: 'permissions.rolesDelete' },
+  { key: capabilities.roles.toggle, labelKey: 'permissions.rolesToggle' },
+  { key: capabilities.roles.permissions, labelKey: 'permissions.rolesPermissions' },
+  { key: capabilities.menus.read, labelKey: 'permissions.menusRead' },
+  { key: capabilities.menus.create, labelKey: 'permissions.menusCreate' },
+  { key: capabilities.menus.update, labelKey: 'permissions.menusUpdate' },
+  { key: capabilities.menus.remove, labelKey: 'permissions.menusDelete' },
+  { key: capabilities.menus.toggle, labelKey: 'permissions.menusToggle' },
+  { key: capabilities.menus.order, labelKey: 'permissions.menusOrder' },
+] as const

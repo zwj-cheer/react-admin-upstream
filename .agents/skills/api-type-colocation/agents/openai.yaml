@@ -1,0 +1,4 @@
+interface:
+  display_name: "API 类型共置"
+  short_description: "将 API 类型放在对应接口文件旁"
+  default_prompt: "使用 $api-type-colocation 整理或审查本项目的 API 请求/响应类型。"
