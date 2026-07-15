@@ -36,12 +36,17 @@ export function LocalLoginForm({
     <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
       <label className="form-field">
         <span className="form-label">{t('auth.email')}</span>
-        <Input autoComplete="username" {...register('email')} />
+        <Input autoComplete="username" status={errors.email && 'error'} {...register('email')} />
         {errors.email && <span className="form-error">{errors.email.message}</span>}
       </label>
       <label className="form-field">
         <span className="form-label">{t('auth.password')}</span>
-        <Input autoComplete="current-password" type="password" {...register('password')} />
+        <Input
+          autoComplete="current-password"
+          status={errors.password && 'error'}
+          type="password"
+          {...register('password')}
+        />
         {errors.password && <span className="form-error">{errors.password.message}</span>}
       </label>
       <Button className="login-submit" disabled={pending} type="submit" variant="primary">

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react'
-import { Check } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { Checkbox as CheckboxPrimitive } from 'radix-ui'
 import { cn } from '@/core/utils'
 
@@ -13,7 +13,7 @@ export function Checkbox({ className, ...props }: ComponentProps<typeof Checkbox
       {...props}
     >
       <CheckboxPrimitive.Indicator>
-        <Check size={13} strokeWidth={2.5} />
+        <Icon name="check" size={13} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   )

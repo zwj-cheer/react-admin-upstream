@@ -1,6 +1,6 @@
-import { ChevronUp } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '@/components/ui/icon'
 import { IconSprite } from '@/components/IconSprite'
 import { useAuthStore } from '@/core/auth/authStore'
 import { useRouteRegistry } from '@/core/routing'
@@ -75,7 +75,7 @@ export function Sidebar({
                   <div className="sidebar-user-name">{session?.user.name}</div>
                   <div className="sidebar-user-meta">{session?.source.toUpperCase()}</div>
                 </div>
-                <ChevronUp className="sidebar-user-chevron" size={15} />
+                <Icon className="sidebar-user-chevron" name="chevron-up" size={16} />
               </button>
             }
           />

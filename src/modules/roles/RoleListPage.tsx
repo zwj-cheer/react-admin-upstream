@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KeyRound, Pencil, Plus, Search, Trash2 } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import type { Role } from '@/core/services/contracts'
@@ -8,10 +8,11 @@ import { Can } from '@/core/permissions/Can'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Tag } from '@/components/ui/tag'
 import { AsyncState } from '@/components/common/AsyncState'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { DataTable, type DataTableColumn } from '@/components/common/DataTable'
-import { Pagination } from '@/components/common/Pagination'
+import { Pagination } from '@/components/ui/pagination'
 import {
   useCreateRole,
   useRemoveRole,
@@ -66,9 +67,9 @@ export function RoleListPage() {
       header: t('common.status'),
       cell: (role) => (
         <div className="row-actions">
-          <span className="status-badge" data-status={role.status}>
+          <Tag color={role.status === 'active' ? 'green' : 'red'} dot>
             {t(role.status === 'active' ? 'common.enabled' : 'common.disabled')}
-          </span>
+          </Tag>
           <Can capability={capabilities.roles.toggle}>
             <Switch
               aria-label={`${role.name} ${t('common.status')}`}
@@ -97,7 +98,7 @@ export function RoleListPage() {
                 setFormOpen(true)
               }}
             >
-              <Pencil size={14} />
+              <Icon name="pencil" size={14} />
               {t('common.edit')}
             </Button>
           </Can>
@@ -109,7 +110,7 @@ export function RoleListPage() {
                 setPermissionOpen(true)
               }}
             >
-              <KeyRound size={14} />
+              <Icon name="key-round" size={14} />
               {t('common.permissions')}
             </Button>
           </Can>
@@ -123,7 +124,7 @@ export function RoleListPage() {
                 setDeleteOpen(true)
               }}
             >
-              <Trash2 size={14} />
+              <Icon name="trash" size={14} />
               {t('common.delete')}
             </Button>
           </Can>
@@ -136,10 +137,11 @@ export function RoleListPage() {
     <section className="page-section">
       <div className="page-toolbar">
         <label className="toolbar-search">
-          <Search className="toolbar-search__icon" size={15} />
           <Input
+            allowClear
             aria-label={t('common.search')}
             placeholder={t('roles.searchPlaceholder')}
+            prefix={<Icon name="search" size={16} />}
             value={query}
             onChange={(event) => {
               setQuery(event.target.value)
@@ -155,7 +157,7 @@ export function RoleListPage() {
               setFormOpen(true)
             }}
           >
-            <Plus size={15} />
+            <Icon name="plus" size={16} />
             {t('common.add')}
           </Button>
         </Can>
@@ -169,10 +171,11 @@ export function RoleListPage() {
       >
         <DataTable columns={columns} getKey={(role) => role.id} items={roles.data?.items ?? []} />
         <Pagination
-          onChange={setPage}
-          page={roles.data?.page ?? page}
+          className="mt-4"
+          current={roles.data?.page ?? page}
           pageSize={roles.data?.pageSize ?? 8}
           total={roles.data?.total ?? 0}
+          onChange={setPage}
         />
       </AsyncState>
 

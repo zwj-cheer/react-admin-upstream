@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { LogOut, Settings } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import {
   DropdownMenu,
@@ -40,12 +40,12 @@ export function AccountMenu({
             </>
           )}
           <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>
-            <Settings size={15} />
+            <Icon name="settings" size={16} />
             {t('settings.title')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => void service.logout()}>
-            <LogOut size={15} />
+            <Icon name="logout" size={16} />
             {t('auth.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -58,12 +58,16 @@ export function RoleFormDialog({
           <div className="form-grid">
             <label className="form-field">
               <span className="form-label">{t('common.name')}</span>
-              <Input {...register('name')} />
+              <Input status={errors.name && 'error'} {...register('name')} />
               {errors.name && <span className="form-error">{errors.name.message}</span>}
             </label>
             <label className="form-field">
               <span className="form-label">{t('common.code')}</span>
-              <Input disabled={role?.code === 'admin'} {...register('code')} />
+              <Input
+                disabled={role?.code === 'admin'}
+                status={errors.code && 'error'}
+                {...register('code')}
+              />
               {errors.code && <span className="form-error">{errors.code.message}</span>}
             </label>
           </div>

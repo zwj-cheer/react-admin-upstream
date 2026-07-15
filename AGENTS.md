@@ -33,8 +33,8 @@
 - opencode 原生搜索 `.agents/skills/` 与 `.claude/skills/`，**不要**新建 `.opencode/skills/`
   或把它加入同步脚本，否则同一 skill 会在多个位置重复发现。
 - 可用 skill：`api-type-colocation`（API 类型组织）、`sync-agent-skills`（软链接同步）、
-  `playwright-best-practices`、`shadcn`、`tanstack-query`、`vercel-composition-patterns`、
-  `vercel-react-best-practices`。
+  `ui-component-refactor`（ui 基础组件重构规范）、`playwright-best-practices`、`shadcn`、
+  `tanstack-query`、`vercel-composition-patterns`、`vercel-react-best-practices`。
 
 ## 关键约定
 

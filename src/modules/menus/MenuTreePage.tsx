@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import type { MenuItem } from '@/core/services/contracts'
@@ -7,7 +6,9 @@ import { useRouteRegistry } from '@/core/routing'
 import { Can } from '@/core/permissions/Can'
 import { capabilities } from '@/core/permissions/capabilities'
 import { IconSprite } from '@/components/IconSprite'
+import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
+import { Tag } from '@/components/ui/tag'
 import { Switch } from '@/components/ui/switch'
 import { AsyncState } from '@/components/common/AsyncState'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
@@ -65,9 +66,7 @@ export function MenuTreePage() {
         knownRouteKeys.has(menu.routeKey) ? (
           routes.find((route) => route.key === menu.routeKey)?.path
         ) : (
-          <span className="status-badge" data-status="disabled">
-            {t('menus.unknownRoute')}
-          </span>
+          <Tag color="red">{t('menus.unknownRoute')}</Tag>
         ),
     },
     {
@@ -75,9 +74,9 @@ export function MenuTreePage() {
       header: t('common.status'),
       cell: (menu) => (
         <div className="row-actions">
-          <span className="status-badge" data-status={menu.status}>
+          <Tag color={menu.status === 'active' ? 'green' : 'red'} dot>
             {t(menu.status === 'active' ? 'common.enabled' : 'common.disabled')}
-          </span>
+          </Tag>
           <Can capability={capabilities.menus.toggle}>
             <Switch
               aria-label={`${menu.name} ${t('common.status')}`}
@@ -124,7 +123,7 @@ export function MenuTreePage() {
                 setFormOpen(true)
               }}
             >
-              <Pencil size={14} />
+              <Icon name="pencil" size={14} />
               {t('common.edit')}
             </Button>
           </Can>
@@ -137,7 +136,7 @@ export function MenuTreePage() {
                 setDeleteOpen(true)
               }}
             >
-              <Trash2 size={14} />
+              <Icon name="trash" size={14} />
               {t('common.delete')}
             </Button>
           </Can>
@@ -157,7 +156,7 @@ export function MenuTreePage() {
               setFormOpen(true)
             }}
           >
-            <Plus size={15} />
+            <Icon name="plus" size={16} />
             {t('common.add')}
           </Button>
         </Can>

@@ -1,4 +1,5 @@
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Icon } from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
 
 export function MenuOrderControls({
@@ -12,23 +13,24 @@ export function MenuOrderControls({
   disabled?: boolean
   onMove: (direction: 'up' | 'down') => void
 }) {
+  const { t } = useTranslation()
   return (
     <div className="menu-order">
       <Button
-        aria-label="Move up"
+        aria-label={t('common.moveUp')}
         disabled={disabled || first}
         size="icon"
         onClick={() => onMove('up')}
       >
-        <ChevronUp size={14} />
+        <Icon name="chevron-up" size={14} />
       </Button>
       <Button
-        aria-label="Move down"
+        aria-label={t('common.moveDown')}
         disabled={disabled || last}
         size="icon"
         onClick={() => onMove('down')}
       >
-        <ChevronDown size={14} />
+        <Icon name="chevron-down" size={14} />
       </Button>
     </div>
   )

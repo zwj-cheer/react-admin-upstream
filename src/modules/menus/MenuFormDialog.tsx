@@ -6,7 +6,7 @@ import type { MenuItem } from '@/core/services/contracts'
 import { useRouteRegistry } from '@/core/routing'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { Select, type SelectOption } from '@/components/ui/select'
 import {
   Dialog,
   DialogContent,
@@ -70,42 +70,54 @@ export function MenuFormDialog({
           <div className="form-grid">
             <label className="form-field">
               <span className="form-label">{t('common.name')}</span>
-              <Input {...register('name')} />
+              <Input status={errors.name && 'error'} {...register('name')} />
               {errors.name && <span className="form-error">{errors.name.message}</span>}
             </label>
             <label className="form-field">
               <span className="form-label">{t('common.icon')}</span>
-              <Input {...register('icon')} />
+              <Input status={errors.icon && 'error'} {...register('icon')} />
               {errors.icon && <span className="form-error">{errors.icon.message}</span>}
             </label>
             <label className="form-field">
               <span className="form-label">{t('common.route')}</span>
-              <Select {...register('routeKey')}>
-                {routes.map((route) => (
-                  <option key={route.key} value={route.key}>
-                    {t(route.titleKey)}
-                  </option>
-                ))}
-              </Select>
+              <Controller
+                control={control}
+                name="routeKey"
+                render={({ field }) => (
+                  <Select
+                    options={routes.map((route) => ({
+                      label: t(route.titleKey),
+                      value: route.key,
+                    }))}
+                    value={field.value}
+                    onChange={(value) => {
+                      if (value) field.onChange(value)
+                    }}
+                  />
+                )}
+              />
             </label>
             <label className="form-field">
               <span className="form-label">{t('common.parent')}</span>
               <Controller
                 control={control}
                 name="parentId"
-                render={({ field }) => (
-                  <Select
-                    value={field.value ?? ''}
-                    onChange={(event) => field.onChange(event.target.value || null)}
-                  >
-                    <option value="">{t('common.rootMenu')}</option>
-                    {parentOptions.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {'—'.repeat(item.depth)} {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const parentSelectOptions: SelectOption[] = [
+                    { label: t('common.rootMenu'), value: '' },
+                    ...parentOptions.map((item) => ({
+                      label: `${'—'.repeat(item.depth)} ${item.name}`.trim(),
+                      value: item.id,
+                    })),
+                  ]
+                  return (
+                    <Select
+                      options={parentSelectOptions}
+                      value={field.value ?? ''}
+                      onChange={(value) => field.onChange(value || null)}
+                    />
+                  )
+                }}
               />
             </label>
           </div>

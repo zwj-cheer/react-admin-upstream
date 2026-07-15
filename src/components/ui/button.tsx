@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { Slot } from 'radix-ui'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { SpinIndicator } from '@/components/ui/spin'
 import { cn } from '@/core/utils'
 
 const buttonVariants = cva(
@@ -32,15 +33,40 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  /**
+   * 加载中：左侧渲染转圈并禁用按钮（对齐 antd Button loading 的常用形态）。
+   * 与 asChild 互斥——asChild 下不注入转圈节点，loading 仅作禁用。
+   */
+  loading?: boolean
 }
 
-export function Button({ asChild = false, className, variant, size, type, ...props }: ButtonProps) {
+export function Button({
+  asChild = false,
+  loading = false,
+  className,
+  variant,
+  size,
+  type,
+  disabled,
+  children,
+  ...props
+}: ButtonProps) {
   const Component = asChild ? Slot.Root : 'button'
   return (
     <Component
       className={cn(buttonVariants({ variant, size }), className)}
+      disabled={disabled || loading}
       type={asChild ? undefined : (type ?? 'button')}
       {...props}
-    />
+    >
+      {loading && !asChild ? (
+        <>
+          <SpinIndicator className="border-current border-t-transparent opacity-70" />
+          {children}
+        </>
+      ) : (
+        children
+      )}
+    </Component>
   )
 }

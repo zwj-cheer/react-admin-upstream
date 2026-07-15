@@ -54,12 +54,12 @@ export function UserFormDialog({
           <div className="form-grid">
             <label className="form-field">
               <span className="form-label">{t('common.name')}</span>
-              <Input {...register('name')} />
+              <Input status={errors.name && 'error'} {...register('name')} />
               {errors.name && <span className="form-error">{errors.name.message}</span>}
             </label>
             <label className="form-field">
               <span className="form-label">{t('common.email')}</span>
-              <Input type="email" {...register('email')} />
+              <Input status={errors.email && 'error'} type="email" {...register('email')} />
               {errors.email && <span className="form-error">{errors.email.message}</span>}
             </label>
           </div>

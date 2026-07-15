@@ -1,4 +1,4 @@
-import { Building2 } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 
@@ -12,7 +12,7 @@ export function OidcLoginButton({
   const { t } = useTranslation()
   return (
     <Button className="login-submit" disabled={disabled} onClick={onClick}>
-      <Building2 size={16} />
+      <Icon name="building" size={16} />
       {t('auth.oidcLogin')}
     </Button>
   )

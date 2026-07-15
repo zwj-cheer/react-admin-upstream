@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { Empty } from '@/components/ui/empty'
+import { Spin } from '@/components/ui/spin'
 
 export function AsyncState({
   loading,
@@ -17,7 +19,11 @@ export function AsyncState({
 }) {
   const { t } = useTranslation()
   if (loading) {
-    return <div className="async-state">{t('common.loading')}</div>
+    return (
+      <div className="async-state">
+        <Spin spinning />
+      </div>
+    )
   }
   if (error) {
     return (
@@ -34,7 +40,7 @@ export function AsyncState({
     )
   }
   if (empty) {
-    return <div className="async-state">{t('common.empty')}</div>
+    return <Empty />
   }
   return children
 }

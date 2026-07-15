@@ -1,4 +1,4 @@
-import { Languages, Menu, Monitor, Moon, Sun } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useLocation } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useMatchedRoute } from '@/core/routing'
@@ -28,11 +28,11 @@ export function AppHeader({
 
   const themeIcon =
     preference === 'light' ? (
-      <Sun size={16} />
+      <Icon name="sun" size={16} />
     ) : preference === 'dark' ? (
-      <Moon size={16} />
+      <Icon name="moon" size={16} />
     ) : (
-      <Monitor size={16} />
+      <Icon name="monitor" size={16} />
     )
   const themeLabel =
     preference === 'light'
@@ -49,7 +49,7 @@ export function AppHeader({
           aria-label={t('a11y.openNavigation')}
           onClick={onOpenNavigation}
         >
-          <Menu size={18} />
+          <Icon name="menu" size={18} />
         </button>
         <h1 className="page-title">{route ? t(route.titleKey) : t('app.name')}</h1>
         {route && <span className="page-subtitle">{t(route.subtitleKey)}</span>}
@@ -70,7 +70,7 @@ export function AppHeader({
           aria-label={t('a11y.switchLanguage')}
           onClick={() => void setLocale((locale === 'zh-CN' ? 'en-US' : 'zh-CN') as Locale)}
         >
-          <Languages size={14} />
+          <Icon name="languages" size={14} />
           {locale === 'zh-CN' ? '中' : 'EN'}
         </button>
         {showAccountMenu && (

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAuthService } from '@/core/auth/AuthProvider'
 import { Button } from '@/components/ui/button'
-import { IconSprite } from '@/components/IconSprite'
+import { Icon } from '@/components/ui/icon'
 
 export function NoPermissionPage() {
   const { t } = useTranslation()
@@ -10,7 +10,7 @@ export function NoPermissionPage() {
     <main className="status-page">
       <section className="status-page__card">
         <div className="status-page__icon">
-          <IconSprite name="shield-check" />
+          <Icon name="shield-check" size={24} />
         </div>
         <h1>{t('auth.noPermission')}</h1>
         <p>{t('auth.noPermissionHint')}</p>

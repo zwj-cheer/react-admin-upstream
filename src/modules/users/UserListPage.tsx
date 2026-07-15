@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Pencil, Plus, Search, ShieldCheck } from 'lucide-react'
+import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import type { User } from '@/core/services/contracts'
@@ -8,9 +8,10 @@ import { capabilities } from '@/core/permissions/capabilities'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Tag } from '@/components/ui/tag'
 import { AsyncState } from '@/components/common/AsyncState'
 import { DataTable, type DataTableColumn } from '@/components/common/DataTable'
-import { Pagination } from '@/components/common/Pagination'
+import { Pagination } from '@/components/ui/pagination'
 import { useRoles } from '@/modules/roles/queries'
 import {
   useAssignUserRoles,
@@ -63,9 +64,9 @@ export function UserListPage() {
       header: t('common.status'),
       cell: (user) => (
         <div className="row-actions">
-          <span className="status-badge" data-status={user.status}>
+          <Tag color={user.status === 'active' ? 'green' : 'red'} dot>
             {t(user.status === 'active' ? 'common.enabled' : 'common.disabled')}
-          </span>
+          </Tag>
           <Can capability={capabilities.users.toggle}>
             <Switch
               aria-label={`${user.name} ${t('common.status')}`}
@@ -102,7 +103,7 @@ export function UserListPage() {
                 setFormOpen(true)
               }}
             >
-              <Pencil size={14} />
+              <Icon name="pencil" size={14} />
               {t('common.edit')}
             </Button>
           </Can>
@@ -114,7 +115,7 @@ export function UserListPage() {
                 setRoleOpen(true)
               }}
             >
-              <ShieldCheck size={14} />
+              <Icon name="shield-check" size={14} />
               {t('common.roles')}
             </Button>
           </Can>
@@ -127,10 +128,11 @@ export function UserListPage() {
     <section className="page-section">
       <div className="page-toolbar">
         <label className="toolbar-search">
-          <Search className="toolbar-search__icon" size={15} />
           <Input
+            allowClear
             aria-label={t('common.search')}
             placeholder={t('users.searchPlaceholder')}
+            prefix={<Icon name="search" size={16} />}
             value={query}
             onChange={(event) => {
               setQuery(event.target.value)
@@ -146,7 +148,7 @@ export function UserListPage() {
               setFormOpen(true)
             }}
           >
-            <Plus size={15} />
+            <Icon name="plus" size={16} />
             {t('common.add')}
           </Button>
         </Can>
@@ -160,10 +162,11 @@ export function UserListPage() {
       >
         <DataTable columns={columns} getKey={(user) => user.id} items={users.data?.items ?? []} />
         <Pagination
-          onChange={setPage}
-          page={users.data?.page ?? page}
+          className="mt-4"
+          current={users.data?.page ?? page}
           pageSize={users.data?.pageSize ?? 8}
           total={users.data?.total ?? 0}
+          onChange={setPage}
         />
       </AsyncState>
 

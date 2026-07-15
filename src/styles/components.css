@@ -62,34 +62,6 @@
   font-weight: 500;
 }
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.status-badge::before {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  content: '';
-}
-
-.status-badge[data-status='active'] {
-  background: var(--green-light);
-  color: var(--green);
-}
-
-.status-badge[data-status='disabled'] {
-  background: var(--red-light);
-  color: var(--red);
-}
-
 .card {
   padding: 22px;
   border: 1px solid var(--border);
@@ -100,43 +72,10 @@
     border-color 0.3s;
 }
 
+/* 桌面表格视觉由 shadcn Table 基元（src/components/ui/table.tsx）提供，
+   此处仅保留 DataTable 外层容器用于桌面/移动端切换。 */
 .data-table-wrap {
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--card);
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-table th {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg) 70%, var(--card));
-  color: var(--t3);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-align: left;
-  text-transform: uppercase;
-}
-
-.data-table td {
-  padding: 15px 16px;
-  border-bottom: 1px solid var(--border);
-  color: var(--t2);
-  vertical-align: middle;
-}
-
-.data-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.data-table tbody tr:hover {
-  background: color-mix(in srgb, var(--gold-light) 35%, transparent);
+  min-width: 0;
 }
 
 .mobile-data-list {
@@ -170,20 +109,6 @@
   text-align: right;
 }
 
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.pagination__summary {
-  margin: 0 6px;
-  color: var(--t3);
-  font-size: 12px;
-}
-
 .async-state {
   display: grid;
   min-height: 220px;
@@ -193,6 +118,40 @@
   border-radius: 14px;
   color: var(--t3);
   text-align: center;
+}
+
+/* sonner toast 调色：挂令牌，取代 richColors（后者不随令牌切换双主题） */
+[data-sonner-toast] {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: var(--shadow-md);
+  color: var(--t1);
+  font-size: 13px;
+}
+
+[data-sonner-toast][data-type='success'] {
+  border-color: color-mix(in srgb, var(--green) 30%, transparent);
+  background: color-mix(in srgb, var(--green) 10%, var(--card));
+  color: var(--green);
+}
+
+[data-sonner-toast][data-type='error'] {
+  border-color: color-mix(in srgb, var(--red) 30%, transparent);
+  background: color-mix(in srgb, var(--red) 10%, var(--card));
+  color: var(--red);
+}
+
+[data-sonner-toast][data-type='warning'] {
+  border-color: color-mix(in srgb, var(--orange) 30%, transparent);
+  background: color-mix(in srgb, var(--orange) 10%, var(--card));
+  color: var(--orange);
+}
+
+[data-sonner-toast][data-type='info'] {
+  border-color: color-mix(in srgb, var(--blue) 30%, transparent);
+  background: color-mix(in srgb, var(--blue) 10%, var(--card));
+  color: var(--blue);
 }
 
 @keyframes fade-in {
@@ -205,5 +164,15 @@
   from {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.98);
+  }
+}
+
+@keyframes tag-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
   }
 }

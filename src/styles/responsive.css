@@ -85,14 +85,8 @@
     align-items: stretch;
   }
 
-  .data-table {
+  .data-table-wrap [data-slot='table-wrap'] {
     display: none;
-  }
-
-  .data-table-wrap {
-    overflow: visible;
-    border: 0;
-    background: transparent;
   }
 
   .mobile-data-list {
@@ -142,8 +136,8 @@
   }
 
   .header-icon-button {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .locale-button {
