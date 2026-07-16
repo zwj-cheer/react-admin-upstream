@@ -3,7 +3,7 @@ import { getTransportAuthSource } from './authTransport'
 import { HttpError } from './errors'
 import { emitUnauthorized } from './unauthorized'
 
-interface HttpClientOptions {
+export interface HttpClientOptions {
   baseUrl: string
   timeoutMs: number
   csrfHeaderName: string
@@ -12,7 +12,7 @@ interface HttpClientOptions {
   fetcher?: typeof fetch
 }
 
-interface RequestOptions {
+export interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
   authSource?: AuthSource

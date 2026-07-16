@@ -32,9 +32,35 @@
   `api-type-colocation` 与 `sync-agent-skills` 为项目本地 skill，直接编辑。
 - opencode 原生搜索 `.agents/skills/` 与 `.claude/skills/`，**不要**新建 `.opencode/skills/`
   或把它加入同步脚本，否则同一 skill 会在多个位置重复发现。
-- 可用 skill：`api-type-colocation`（API 类型组织）、`sync-agent-skills`（软链接同步）、
-  `ui-component-refactor`（ui 基础组件重构规范）、`playwright-best-practices`、`shadcn`、
-  `tanstack-query`、`vercel-composition-patterns`、`vercel-react-best-practices`。
+- 可用 skill：`api-type-colocation`（API 类型组织）、`core-tool-registry`（新增 core 工具/组件
+  时如何登记进发现体系）、`sync-agent-skills`（软链接同步）、`ui-component-refactor`（ui 基础
+  组件重构规范）、`playwright-best-practices`、`shadcn`、`tanstack-query`、
+  `vercel-composition-patterns`、`vercel-react-best-practices`。
+
+## 既有能力地图
+
+**动手写任何工具函数、hook 或通用组件前，先查这张表。** 目的是防止生态膨胀后重复造轮子：
+需求已有封装的，一律复用；表里没有、确需新增的，按 `core-tool-registry` skill 登记回本表。
+带 ESLint 护栏的封装，绕开写散装实现会被 lint 直接拦下。
+
+| 需求 | 用这个 | 位置 | 护栏 |
+| --- | --- | --- | --- |
+| 日期/时间展示 | `formatDate` / `formatDateMinute` / `formatDateTime` / `formatTime` / `formatFromNow` | `@/core/datetime` | ✅ 禁散装 `Intl.DateTimeFormat` / `toLocaleDateString` / 直接 `dayjs` |
+| 权限判断 | `authorize` / `<Can>` / `capabilities` | `@/core/permissions` | — |
+| 路由元数据/菜单/守卫 | `RegisteredRoute` / `useRouteRegistry` / `useAuthorizedRoutes` | `@/core/routing` | — |
+| HTTP 请求（带 token/CSRF/401） | `HttpClient` + adapter | `@/core/http`、`@/adapters/rest` | — |
+| 主题（light/dark/system） | `useThemeStore` / `resolveThemePreference` | `@/core/theme` | — |
+| 国际化 | `useTranslation` / `setLocale` | `react-i18next`、`@/core/i18n` | — |
+| 认证会话 | `useAuthStore` / `useAuthService` | `@/core/auth` | — |
+| 运行时配置 | `useRuntimeConfig` / `parseRuntimeConfig` | `@/core/config` | — |
+| 数据表格（桌面/移动自适应） | `DataTable` | `@/components/common` | — |
+| 异步态（loading/error/empty） | `AsyncState` | `@/components/common` | — |
+| 二次确认弹窗 | `ConfirmDialog` | `@/components/common` | — |
+| className 合并 | `cn` | `@/core/utils` | — |
+| 基础 UI 组件（Button/Input/Select/Table…） | shadcn 形态组件 | `@/components/ui` | — |
+
+> `@/core/*` 每个域都提供具名导出的 barrel `index.ts`（禁 `export *`，避免 Vercel skill 指出的
+> barrel 成本），配合编辑器 auto-import 即可被发现；写代码时优先按上表路径 import。
 
 ## 关键约定
 
@@ -80,6 +106,10 @@
 12. **移动端适配按「项目能力配置」表执行**：当前值为「需要」，新增页面必须在
     1440×900 / 768×1024 / 390×844 三档视口下可用并通过对应视觉基线；不得在单个页面里
     私自决定"这个页面不用适配移动端"。
+13. **造轮子前先查「既有能力地图」**：新增任何日期/权限/请求/主题等横切工具、通用 hook 或
+    `components/common` 组件前，先在上文能力地图里找有没有现成封装；有则复用，没有再新增。
+    新增后必须按 `core-tool-registry` skill 登记：域内 barrel 具名导出 + 回填能力地图 +
+    （必要时）加 ESLint 护栏，让下一个人/模型能发现它、且写散装实现会被 lint 拦下。
 
 ## 文档语言
 

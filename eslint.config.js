@@ -51,4 +51,36 @@ export default defineConfig([
       'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
     },
   },
+  {
+    // 发现体系护栏：业务层日期展示必须走 `@/core/datetime` 封装，禁止散装格式化。
+    // 目的是让生态膨胀时，写错的人被 lint 直接拦下并导向既有工具，而非重复造轮子。
+    // `src/core/datetime` 自身是封装实现，豁免。
+    files: ['src/modules/**/*.{ts,tsx}', 'src/components/**/*.{ts,tsx}', 'src/layouts/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'dayjs',
+              message: '业务层禁止直接使用 dayjs，请从 @/core/datetime 引入 formatDate/formatDateTime/formatFromNow 等统一封装。',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "NewExpression[callee.object.name='Intl'][callee.property.name='DateTimeFormat']",
+          message: '禁止用 Intl.DateTimeFormat 手写日期格式，请用 @/core/datetime 的统一封装。',
+        },
+        {
+          selector:
+            "CallExpression[callee.property.name=/^toLocale(Date|Time)?String$/]",
+          message: '禁止用 toLocaleString/toLocaleDateString 展示日期，请用 @/core/datetime 的统一封装。',
+        },
+      ],
+    },
+  },
 ])

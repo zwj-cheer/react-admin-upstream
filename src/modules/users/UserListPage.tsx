@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import type { User } from '@/core/services/contracts'
+import { formatDate } from '@/core/datetime'
 import { Can } from '@/core/permissions/Can'
 import { capabilities } from '@/core/permissions/capabilities'
 import { Button } from '@/components/ui/button'
@@ -24,7 +25,7 @@ import { UserFormDialog } from './UserFormDialog'
 import { UserRoleDialog } from './UserRoleDialog'
 
 export function UserListPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const [formOpen, setFormOpen] = useState(false)
@@ -85,10 +86,7 @@ export function UserListPage() {
     {
       key: 'created',
       header: t('common.createdAt'),
-      cell: (user) =>
-        new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(
-          new Date(user.createdAt),
-        ),
+      cell: (user) => formatDate(user.createdAt),
     },
     {
       key: 'actions',
