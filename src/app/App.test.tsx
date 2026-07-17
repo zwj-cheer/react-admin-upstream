@@ -28,12 +28,20 @@ describe('application entry', () => {
       <RuntimeConfigProvider config={developmentRuntimeConfig}>
         <RouteRegistryProvider routes={registeredRoutes}>
           <AuthProvider service={authService}>
-            <LoginPage />
+            <LoginPage
+              branding={{ name: 'Probe Workspace', shortName: 'PW', edition: 'Probe Edition' }}
+            />
           </AuthProvider>
         </RouteRegistryProvider>
       </RuntimeConfigProvider>,
       ['/login'],
     )
     expect(screen.getByText('账号密码登录')).toBeInTheDocument()
+    // branding 三字段线路:名称、缩写标记、edition 均来自注入的 branding prop
+    expect(screen.getByText('Probe Workspace')).toBeInTheDocument()
+    expect(screen.getByText('PW')).toBeInTheDocument()
+    expect(screen.getByText('Probe Edition')).toBeInTheDocument()
+    // auth.title 以 branding.name 插值
+    expect(screen.getByRole('heading', { name: '登录 Probe Workspace' })).toBeInTheDocument()
   })
 })

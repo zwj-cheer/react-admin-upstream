@@ -2,6 +2,7 @@ import { Icon } from '@/components/ui/icon'
 import { useLocation } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useMatchedRoute } from '@/core/routing'
+import { useRuntimeConfig } from '@/core/config/RuntimeConfigProvider'
 import { useAuthStore } from '@/core/auth/authStore'
 import { useThemeStore } from '@/core/theme/themeStore'
 import { setLocale } from '@/core/i18n'
@@ -19,6 +20,7 @@ export function AppHeader({
   showAccountMenu: boolean
 }) {
   const { t, i18n } = useTranslation()
+  const config = useRuntimeConfig()
   const location = useLocation()
   const route = useMatchedRoute(location.pathname)
   const session = useAuthStore((state) => state.session)
@@ -51,7 +53,7 @@ export function AppHeader({
         >
           <Icon name="menu" size={18} />
         </button>
-        <h1 className="page-title">{route ? t(route.titleKey) : t('app.name')}</h1>
+        <h1 className="page-title">{route ? t(route.titleKey) : config.app.name}</h1>
         {route && <span className="page-subtitle">{t(route.subtitleKey)}</span>}
       </div>
       <div className="app-header__right">

@@ -24,6 +24,7 @@ export async function startApplication(): Promise<void> {
     const config = await loadRuntimeConfig({
       trustedOrigins: projectTrustedOrigins,
     })
+    document.title = config.app.name
     const preferences = resolvePreferences(config)
     applyPreferences(preferences)
     initializeThemeStore(config.defaults.theme, preferences.theme.preference)

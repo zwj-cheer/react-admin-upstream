@@ -1,6 +1,5 @@
 {
   "app": {
-    "name": "管理工作台",
     "loading": "正在初始化应用"
   },
   "errors": {
@@ -81,7 +80,7 @@
     "language": "语言"
   },
   "auth": {
-    "title": "登录管理工作台",
+    "title": "登录 {{name}}",
     "subtitle": "使用本地账号或组织身份登录",
     "email": "邮箱",
     "password": "密码",

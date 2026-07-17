@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/core/auth/authStore'
+import { useRuntimeConfig } from '@/core/config/RuntimeConfigProvider'
 import { RouteRegistryProvider, useResolvePostLoginPath } from '@/core/routing'
 import { registeredRoutes } from './routeRegistry'
 import { RequireAuth } from './RequireAuth'
@@ -37,19 +38,18 @@ function NotFoundPage() {
 }
 
 function AppRoutes() {
+  const config = useRuntimeConfig()
+  const branding = { name: config.app.name, ...projectBranding }
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage branding={branding} />} />
       <Route path="/auth/callback" element={<OidcCallbackPage />} />
       <Route path="/auth/error" element={<AuthErrorPage />} />
       <Route element={<RequireAuth />}>
         <Route path="/forbidden" element={<NoPermissionPage />} />
         <Route
           element={
-            <AppShell
-              branding={projectBranding}
-              groupLabelKey={projectNavigation.systemGroupLabelKey}
-            />
+            <AppShell branding={branding} groupLabelKey={projectNavigation.systemGroupLabelKey} />
           }
         >
           <Route index element={<DefaultRoute />} />

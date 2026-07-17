@@ -6,8 +6,14 @@ import { useAuthStore } from '@/core/auth/authStore'
 import { useResolvePostLoginPath } from '@/core/routing'
 import { LocalLoginForm } from './LocalLoginForm'
 import { OidcLoginButton } from './OidcLoginButton'
+import type { ShellBranding } from '@/layouts/types'
 
-export function LoginPage() {
+export interface LoginPageProps {
+  /** 品牌标识：name 来自 runtime.json 的 app.name，shortName/edition 来自编译期项目配置。 */
+  branding: ShellBranding
+}
+
+export function LoginPage({ branding }: LoginPageProps) {
   const { t } = useTranslation()
   const config = useRuntimeConfig()
   const service = useAuthService()
@@ -18,12 +24,6 @@ export function LoginPage() {
   const location = useLocation()
   const resolvePostLoginPath = useResolvePostLoginPath()
   const returnTo = new URLSearchParams(location.search).get('returnTo')
-  const shortName = config.app.name
-    .split(/\s+/)
-    .map((word) => word[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
 
   if (status === 'authenticated' && session) {
     return <Navigate replace to={resolvePostLoginPath(session, returnTo)} />
@@ -37,13 +37,13 @@ export function LoginPage() {
     <main className="login-page">
       <section className="login-card page-enter">
         <div className="login-brand">
-          <div className="brand-mark">{shortName}</div>
+          <div className="brand-mark">{branding.shortName}</div>
           <div>
-            <div className="brand-name">{config.app.name}</div>
-            <div className="brand-meta">Upstream Template</div>
+            <div className="brand-name">{branding.name}</div>
+            <div className="brand-meta">{branding.edition}</div>
           </div>
         </div>
-        <h1 className="login-title">{t('auth.title')}</h1>
+        <h1 className="login-title">{t('auth.title', { name: branding.name })}</h1>
         <p className="login-subtitle">{t('auth.subtitle')}</p>
 
         {showLocal && (

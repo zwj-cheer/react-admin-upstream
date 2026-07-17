@@ -1,6 +1,5 @@
 {
   "app": {
-    "name": "Admin Workspace",
     "loading": "Initializing application"
   },
   "errors": {
@@ -81,7 +80,7 @@
     "language": "Language"
   },
   "auth": {
-    "title": "Sign in to Admin Workspace",
+    "title": "Sign in to {{name}}",
     "subtitle": "Use a local account or your organization identity",
     "email": "Email",
     "password": "Password",
