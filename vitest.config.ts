@@ -10,7 +10,12 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/**/*.test.{ts,tsx}', 'tests/deploy/**/*.test.ts', 'tests/upgrade/**/*.test.ts'],
+    include: [
+      'src/**/*.test.{ts,tsx}',
+      'tests/deploy/**/*.test.ts',
+      'tests/lint/**/*.test.ts',
+      'tests/upgrade/**/*.test.ts',
+    ],
     environment: 'jsdom',
     environmentOptions: {
       jsdom: {

@@ -98,4 +98,27 @@ describe('Popconfirm', () => {
     await waitFor(() => expect(onConfirm).toHaveBeenCalledOnce())
     expect(screen.getByText('确定删除该行？')).toBeInTheDocument()
   })
+
+  it('re-enables the confirm button when reopening while a stale confirm is still pending', async () => {
+    let resolve!: () => void
+    const onConfirm = vi.fn(
+      () =>
+        new Promise<void>((r) => {
+          resolve = r
+        }),
+    )
+    renderConfirm({ onConfirm })
+    fireEvent.click(screen.getByRole('button', { name: '删除' }))
+    fireEvent.click(screen.getByRole('button', { name: '确认' }))
+    expect(screen.getByRole('button', { name: '确认' })).toBeDisabled()
+    // pending 中取消并重开:新会话确认按钮不得被旧 promise 禁用
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
+    await waitFor(() => expect(screen.queryByText('确定删除该行？')).not.toBeInTheDocument())
+    fireEvent.click(screen.getByRole('button', { name: '删除' }))
+    expect(screen.getByRole('button', { name: '确认' })).toBeEnabled()
+    // 旧 promise settle 也不得影响新会话按钮状态
+    resolve()
+    await waitFor(() => expect(onConfirm).toHaveBeenCalledOnce())
+    expect(screen.getByRole('button', { name: '确认' })).toBeEnabled()
+  })
 })

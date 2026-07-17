@@ -197,6 +197,10 @@ function SortIcon({ order }: { order: SortOrder }) {
  * 数据表格：参数与交互对齐 Ant Design Table 常用子集
  * （columns/dataSource/rowKey/loading/pagination/rowSelection/sorter），
  * 视觉沿用模板令牌体系：圆角卡片容器、浅底大写表头、行 hover、居中分页。
+ *
+ * **定位：两层组件重构的范式参考（见 ui-component-refactor skill），暂无生产消费者。**
+ * 业务列表页请用 `@/components/common` 的 `DataTable`（含移动端卡片降级），
+ * 页面级分页用 `@/components/common` 的 `Pagination` 手动组合。
  */
 export function Table<T>({
   columns,

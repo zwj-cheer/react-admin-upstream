@@ -51,6 +51,7 @@ export function Popconfirm({
 
   const close = () => {
     sessionRef.current += 1
+    setPending(false)
     setOpen(false)
   }
 
@@ -62,10 +63,11 @@ export function Popconfirm({
       try {
         await result
       } catch {
+        // 陈旧会话的 pending 归属新会话时不得误清（close 已重置）。
+        if (sessionRef.current === session) setPending(false)
         return
-      } finally {
-        setPending(false)
       }
+      if (sessionRef.current === session) setPending(false)
     }
     if (sessionRef.current === session) close()
   }

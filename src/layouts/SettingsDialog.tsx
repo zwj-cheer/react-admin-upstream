@@ -45,6 +45,7 @@ export function SettingsDialog({
           <label className="settings-field">
             <span className="settings-label">{t('settings.theme')}</span>
             <Select
+              aria-label={t('settings.theme')}
               options={themeOptions}
               value={preference}
               onChange={(value) => {
@@ -55,6 +56,7 @@ export function SettingsDialog({
           <label className="settings-field">
             <span className="settings-label">{t('settings.language')}</span>
             <Select
+              aria-label={t('settings.language')}
               options={localeOptions}
               value={locale}
               onChange={(value) => {

@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/core/utils'
 
 export interface OtpInputProps {
-  /** 当前值（受控，必传）；长度可短于 length，不足处渲染为空格。 */
+  /** 当前值（受控，必传）；长度可短于 length，中间空位以空格占位，不足处渲染为空。 */
   value: string
-  /** 值变化回调（输入、退格、粘贴都会回传拼接后的完整字符串，长度 ≤ length）。 */
+  /** 值变化回调（输入、退格、粘贴都会回传拼接后的完整字符串，长度 ≤ length；中间空位为空格，尾部空位裁掉）。 */
   onChange: (value: string) => void
   /** 格子数量，默认 6。 */
   length?: number
@@ -53,11 +53,14 @@ export function OtpInput({
     inputsRef.current[clamped]?.select()
   }
 
+  /** 空位以空格占位保留槽位对齐，仅裁掉尾部空位——中间槽编辑不得使后续数字左移。 */
+  const charsToValue = (chars: string[]) => chars.slice(0, length).join('').replace(/ +$/, '')
+
   const setCharAt = (index: number, char: string) => {
     const chars = value.split('')
-    while (chars.length < length) chars.push('')
-    chars[index] = char
-    onChange(chars.join('').slice(0, length))
+    while (chars.length < length) chars.push(' ')
+    chars[index] = char === '' ? ' ' : char
+    onChange(charsToValue(chars))
   }
 
   const handleChange = (index: number, raw: string) => {
@@ -70,7 +73,8 @@ export function OtpInput({
   const handleKeyDown = (index: number, event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Backspace') {
       event.preventDefault()
-      if (value[index]) {
+      const filled = value[index] !== undefined && value[index] !== ' '
+      if (filled) {
         setCharAt(index, '')
       } else if (index > 0) {
         setCharAt(index - 1, '')
@@ -93,11 +97,11 @@ export function OtpInput({
       .filter((char) => charRegex.test(char))
     if (pasted.length === 0) return
     const chars = value.split('')
-    while (chars.length < length) chars.push('')
+    while (chars.length < length) chars.push(' ')
     for (let i = 0; i < pasted.length && index + i < length; i += 1) {
       chars[index + i] = pasted[i]
     }
-    onChange(chars.join('').slice(0, length))
+    onChange(charsToValue(chars))
     focusAt(index + pasted.length)
   }
 
@@ -119,7 +123,7 @@ export function OtpInput({
           ref={(node) => {
             inputsRef.current[index] = node
           }}
-          value={value[index] ?? ''}
+          value={value[index] === ' ' ? '' : (value[index] ?? '')}
           onChange={(event) => {
             handleChange(index, event.target.value)
           }}

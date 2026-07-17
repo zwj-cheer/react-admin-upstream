@@ -60,10 +60,10 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [
+          patterns: [
             {
-              name: 'dayjs',
-              message: '业务层禁止直接使用 dayjs，请从 @/core/datetime 引入 formatDate/formatDateTime/formatFromNow 等统一封装。',
+              group: ['dayjs', 'dayjs/*'],
+              message: '业务层禁止直接使用 dayjs（含 dayjs/esm、dayjs/plugin/* 等子路径），请从 @/core/datetime 引入 formatDate/formatDateTime/formatFromNow 等统一封装。',
             },
           ],
         },
@@ -73,6 +73,11 @@ export default defineConfig([
         {
           selector:
             "NewExpression[callee.object.name='Intl'][callee.property.name='DateTimeFormat']",
+          message: '禁止用 Intl.DateTimeFormat 手写日期格式，请用 @/core/datetime 的统一封装。',
+        },
+        {
+          selector:
+            "CallExpression[callee.object.name='Intl'][callee.property.name='DateTimeFormat']",
           message: '禁止用 Intl.DateTimeFormat 手写日期格式，请用 @/core/datetime 的统一封装。',
         },
         {

@@ -52,8 +52,9 @@ export function Spin({ spinning, children, className }: SpinProps) {
   }
 
   return (
-    <div className={cn('relative min-w-0', className)}>
-      {children}
+    <div aria-busy={spinning || undefined} className={cn('relative min-w-0', className)}>
+      {/* spinning 时内容 inert：遮罩只拦截指针，已聚焦的内部控件仍能收到键盘事件。 */}
+      <div inert={spinning || undefined}>{children}</div>
       {spinning && (
         <div className="absolute inset-0 z-10 grid place-items-center rounded-[14px] bg-[color-mix(in_srgb,var(--card)_65%,transparent)] text-[13px] text-[var(--t3)]">
           {t('common.loading')}

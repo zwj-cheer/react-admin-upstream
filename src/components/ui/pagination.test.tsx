@@ -53,4 +53,20 @@ describe('Pagination', () => {
       expect(button).toBeDisabled()
     }
   })
+
+  it('keeps the exact last page reachable when total is a multiple of pageSize', () => {
+    const onChange = vi.fn()
+    render(<Pagination current={1} pageSize={8} total={16} onChange={onChange} />)
+    // total 恰为 pageSize 整数倍:页数是 2 而非 3,末页可达且 next 在末页禁用
+    fireEvent.click(screen.getByText('2'))
+    expect(onChange).toHaveBeenCalledWith(2)
+    expect(screen.queryByText('3')).not.toBeInTheDocument()
+  })
+
+  it('renders a single disabled page when total is 0', () => {
+    render(<Pagination current={1} pageSize={8} total={0} onChange={() => {}} />)
+    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText('上一页')).toBeDisabled()
+    expect(screen.getByText('下一页')).toBeDisabled()
+  })
 })

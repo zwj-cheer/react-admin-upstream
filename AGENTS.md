@@ -54,6 +54,7 @@
 | 认证会话 | `useAuthStore` / `useAuthService` | `@/core/auth` | — |
 | 运行时配置 | `useRuntimeConfig` / `parseRuntimeConfig` | `@/core/config` | — |
 | 数据表格（桌面/移动自适应） | `DataTable` | `@/components/common` | — |
+| 表格（antd 形态，范式参考） | `Table` 是两层重构的范式参考，暂无生产消费者；业务列表页一律用 `DataTable`（移动端卡片降级），勿直接消费高层 `Table` | `@/components/ui/table` | — |
 | 异步态（loading/error/empty） | `AsyncState` | `@/components/common` | — |
 | 二次确认弹窗 | `ConfirmDialog` | `@/components/common` | — |
 | className 合并 | `cn` | `@/core/utils` | — |

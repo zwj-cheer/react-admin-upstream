@@ -85,6 +85,7 @@ export function MenuFormDialog({
                 name="routeKey"
                 render={({ field }) => (
                   <Select
+                    aria-label={t('common.route')}
                     options={routes.map((route) => ({
                       label: t(route.titleKey),
                       value: route.key,
@@ -112,6 +113,7 @@ export function MenuFormDialog({
                   ]
                   return (
                     <Select
+                      aria-label={t('common.parent')}
                       options={parentSelectOptions}
                       value={field.value ?? ''}
                       onChange={(value) => field.onChange(value || null)}

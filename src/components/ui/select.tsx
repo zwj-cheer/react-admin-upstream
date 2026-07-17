@@ -68,6 +68,11 @@ interface SelectBaseProps {
   size?: 'middle' | 'small'
   /** 附加到触发器按钮的类名。 */
   className?: string
+  /**
+   * 可访问名称。触发器是 div[role=combobox]（非 labelable 元素），
+   * `<label>` 包裹不生效——凡有可见字段标签的调用点必须显式传入。
+   */
+  'aria-label'?: string
 }
 
 export interface SelectSingleProps extends SelectBaseProps {
@@ -117,6 +122,7 @@ export function Select(props: SelectProps) {
     disabled,
     size = 'middle',
     className,
+    'aria-label': ariaLabel,
   } = props
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -192,6 +198,7 @@ export function Select(props: SelectProps) {
             button 嵌套 button 是非法 HTML；键盘开启由 onKeyDown 补齐 */}
         <div
           aria-controls={open ? listboxId : undefined}
+          aria-label={ariaLabel}
           aria-disabled={disabled || undefined}
           aria-expanded={open}
           aria-haspopup="listbox"
@@ -208,6 +215,8 @@ export function Select(props: SelectProps) {
           tabIndex={disabled ? -1 : 0}
           onKeyDown={(event) => {
             if (!interactive) return
+            // 嵌套的清除/移除 tag 按钮的 Enter/Space 不得冒泡打开面板。
+            if (event.target !== event.currentTarget) return
             if (['Enter', ' ', 'ArrowDown'].includes(event.key) && !open) {
               event.preventDefault()
               setOpen(true)
