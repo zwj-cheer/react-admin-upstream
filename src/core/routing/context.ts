@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react'
+import { createContext, use, useMemo } from 'react'
 import type { Session } from '@/core/services/contracts'
 import {
   findRouteByPath,
@@ -11,7 +11,7 @@ export const RouteRegistryContext = createContext<readonly RegisteredRoute[] | n
 
 /** 读取当前路由表；必须在 `RouteRegistryProvider` 内使用。 */
 export function useRouteRegistry(): readonly RegisteredRoute[] {
-  const routes = useContext(RouteRegistryContext)
+  const routes = use(RouteRegistryContext)
   if (routes === null) {
     throw new Error('useRouteRegistry must be used within a RouteRegistryProvider')
   }

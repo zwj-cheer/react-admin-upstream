@@ -37,8 +37,13 @@ export async function startApplication(): Promise<void> {
       await unregisterTemplateWorker()
     }
 
-    const { renderApplication } = await import('@/app/renderApplication')
-    renderApplication(config)
+    const [{ createAppRuntime, startAppRuntime }, { renderApplication }] = await Promise.all([
+      import('@/app/runtime'),
+      import('@/app/renderApplication'),
+    ])
+    const runtime = createAppRuntime(config)
+    const authReady = startAppRuntime(runtime)
+    renderApplication(config, runtime, authReady)
   } catch (error) {
     renderBootstrapError(
       error instanceof RuntimeConfigError ? error : new RuntimeConfigError('invalid-schema'),

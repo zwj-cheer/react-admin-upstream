@@ -1,6 +1,21 @@
+import { z } from 'zod'
 import type { HttpClient } from '@/core/http/client'
 import type { AuthServiceContract, AuthSource, Session } from '@/core/services/contracts'
-import { sessionSchema } from './schemas'
+import { capabilitySchema } from './schemas'
+
+export const sessionSchema = z.object({
+  user: z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    email: z.string().email(),
+    avatarUrl: z.string().url().optional(),
+  }),
+  source: z.enum(['local', 'oidc']),
+  expiresAt: z.string().datetime(),
+  capabilities: z.array(capabilitySchema),
+})
+
+export type SessionResponse = z.infer<typeof sessionSchema>
 
 function parseSession(response: unknown, expectedSource: AuthSource): Session {
   const session = sessionSchema.parse(response)
@@ -23,8 +38,8 @@ export class RestAuthAdapter implements AuthServiceContract {
     return parseSession(response, 'local')
   }
 
-  async getSession(source: AuthSource): Promise<Session> {
-    const response = await this.client.request('/session', { authSource: source })
+  async getSession(source: AuthSource, signal?: AbortSignal): Promise<Session> {
+    const response = await this.client.request('/session', { authSource: source, signal })
     return parseSession(response, source)
   }
 

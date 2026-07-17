@@ -1,14 +1,9 @@
-import AxeBuilder from '@axe-core/playwright'
-import { expect, test } from '@playwright/test'
+import { test } from '@playwright/test'
+import { createAxeBuilder, expectNoA11yViolations, waitForPageEnterAnimation } from './helpers'
 
-test('login has no serious WCAG A/AA violations', async ({ page }) => {
+test('login has no WCAG A/AA violations', async ({ page }) => {
   await page.goto('/login')
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze()
-  expect(
-    results.violations.filter((violation) =>
-      ['serious', 'critical'].includes(violation.impact ?? ''),
-    ),
-  ).toEqual([])
+  await waitForPageEnterAnimation(page)
+  const results = await createAxeBuilder(page).analyze()
+  expectNoA11yViolations(results)
 })

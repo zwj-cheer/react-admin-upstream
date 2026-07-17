@@ -15,6 +15,9 @@
   --gold-light: #fef5f1;
   --gold-dark: #933f29;
   --primary-foreground: #ffffff;
+  --danger-foreground: #ffffff;
+  --switch-thumb: #ffffff;
+  --switch-thumb-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   --blue: #3b82f6;
   --blue-light: #eff6ff;
   --green: #047857;
@@ -31,6 +34,8 @@
   --border-strong: #d1d5db;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 18px 50px rgba(15, 23, 42, 0.08);
+  --overlay: rgba(0, 0, 0, 0.45);
   --header-height: 64px;
   --icon: #8693aa;
   --radius-sm: 6px;
@@ -67,6 +72,9 @@
   --gold-light: rgba(240, 160, 128, 0.1);
   --gold-dark: #f0a080;
   --primary-foreground: #2a160f;
+  --danger-foreground: #2a0d0d;
+  --switch-thumb: #f8fafc;
+  --switch-thumb-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   --blue: #60a5fa;
   --blue-light: rgba(59, 130, 246, 0.1);
   --green: #34d399;
@@ -83,4 +91,5 @@
   --border-strong: #2d3d4f;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.35);
 }

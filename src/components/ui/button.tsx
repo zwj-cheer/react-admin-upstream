@@ -1,7 +1,6 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { Slot } from 'radix-ui'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { SpinIndicator } from '@/components/ui/spin'
 import { cn } from '@/core/utils'
 
 const buttonVariants = cva(
@@ -15,7 +14,7 @@ const buttonVariants = cva(
         'outline-accent':
           'border-[1.5px] border-[var(--gold)] bg-[var(--gold-light)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--primary-foreground)]',
         ghost: 'border-transparent bg-transparent hover:bg-[var(--bg)]',
-        danger: 'border-[var(--red)] bg-[var(--red)] text-white',
+        danger: 'border-[var(--red)] bg-[var(--red)] text-[var(--danger-foreground)]',
       },
       size: {
         default: 'min-h-9 px-3.5 py-2',
@@ -33,16 +32,10 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  /**
-   * 加载中：左侧渲染转圈并禁用按钮（对齐 antd Button loading 的常用形态）。
-   * 与 asChild 互斥——asChild 下不注入转圈节点，loading 仅作禁用。
-   */
-  loading?: boolean
 }
 
 export function Button({
   asChild = false,
-  loading = false,
   className,
   variant,
   size,
@@ -55,18 +48,11 @@ export function Button({
   return (
     <Component
       className={cn(buttonVariants({ variant, size }), className)}
-      disabled={disabled || loading}
+      disabled={disabled}
       type={asChild ? undefined : (type ?? 'button')}
       {...props}
     >
-      {loading && !asChild ? (
-        <>
-          <SpinIndicator className="border-current border-t-transparent opacity-70" />
-          {children}
-        </>
-      ) : (
-        children
-      )}
+      {children}
     </Component>
   )
 }

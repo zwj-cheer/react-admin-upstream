@@ -1,6 +1,0 @@
-export { HttpClient } from './client'
-export type { HttpClientOptions, RequestOptions } from './client'
-export { HttpError } from './errors'
-export type { HttpErrorKind } from './errors'
-export { subscribeUnauthorized, emitUnauthorized } from './unauthorized'
-export { setTransportAuthSource, getTransportAuthSource } from './authTransport'

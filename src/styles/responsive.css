@@ -1,36 +1,10 @@
 @media (max-width: 768px) {
-  body.sidebar-open {
-    overflow: hidden;
-  }
-
   .app-main {
     margin-left: 0;
   }
 
-  .app-sidebar {
-    width: min(84vw, 320px);
-    transform: translateX(-100%);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-  }
-
-  .app-sidebar.is-open {
-    transform: translateX(0);
-  }
-
-  .sidebar-mask {
-    position: fixed;
-    z-index: 90;
-    inset: 0;
-    display: block;
-    background: rgba(0, 0, 0, 0.42);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.22s ease;
-  }
-
-  .sidebar-mask.show {
-    opacity: 1;
-    pointer-events: auto;
+  .app-sidebar--desktop {
+    display: none;
   }
 
   .app-header {
@@ -107,11 +81,6 @@
     border-left: 0;
     border-radius: 18px 18px 0 0;
     animation: sheet-in 0.2s ease;
-  }
-
-  .form-grid,
-  .capability-grid {
-    grid-template-columns: 1fr;
   }
 
   @keyframes sheet-in {

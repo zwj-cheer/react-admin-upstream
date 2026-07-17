@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test'
 
 test('saved theme and language apply before the login application is visible', async ({ page }) => {
   await page.addInitScript(() => {
-    localStorage.setItem('react-admin-template.theme', 'dark')
-    localStorage.setItem('react-admin-template.locale', 'en-US')
+    localStorage.setItem('react-admin-template.theme:v1', 'dark')
+    localStorage.setItem('react-admin-template.locale:v1', 'en-US')
   })
   await page.goto('/login')
   await expect(page.locator('html')).toHaveClass(/\bdark\b/)

@@ -12,8 +12,21 @@
   --color-background: var(--bg);
   --color-foreground: var(--t1);
   --color-card: var(--card);
+  --color-card-foreground: var(--t1);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--t1);
   --color-primary: var(--gold);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--bg);
+  --color-secondary-foreground: var(--t1);
+  --color-muted: var(--bg);
+  --color-muted-foreground: var(--t3);
+  --color-accent: var(--gold-light);
+  --color-accent-foreground: var(--gold);
+  --color-destructive: var(--red);
+  --color-destructive-foreground: var(--danger-foreground);
   --color-border: var(--border);
-  --color-muted: var(--t3);
+  --color-input: var(--border-strong);
+  --color-ring: var(--gold);
   --font-sans: 'Geist', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
 }

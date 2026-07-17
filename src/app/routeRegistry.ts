@@ -1,11 +1,19 @@
-import type { RegisteredRoute } from '@/core/routing'
+import { parseListSearchParams, type RegisteredRoute } from '@/core/routing'
 import { capabilities } from '@/core/permissions/capabilities'
-import { UserListPage } from '@/modules/users/routes'
-import { RoleListPage } from '@/modules/roles/routes'
-import { MenuTreePage } from '@/modules/menus/routes'
 import { projectRoutes } from '@/project/routes'
+import type { ShouldRevalidateFunction } from 'react-router'
 
 export type { RegisteredRoute } from '@/core/routing'
+
+/** 列表查询由 TanStack Query 响应 URL 搜索参数变化，避免重复阻塞式执行 route loader。 */
+export const shouldRevalidateListRoute: ShouldRevalidateFunction = ({
+  currentUrl,
+  defaultShouldRevalidate,
+  nextUrl,
+}) =>
+  currentUrl.pathname === nextUrl.pathname && currentUrl.search !== nextUrl.search
+    ? false
+    : defaultShouldRevalidate
 
 export const templateRoutes: RegisteredRoute[] = [
   {
@@ -15,7 +23,26 @@ export const templateRoutes: RegisteredRoute[] = [
     subtitleKey: 'users.subtitle',
     icon: 'users',
     capability: capabilities.users.read,
-    component: UserListPage,
+    lazy: () => import('@/modules/users/routes'),
+    preload: async ({ queryClient, request, services }) => {
+      const [{ USER_LIST_PAGE_SIZE, usersQueryOptions }, roles] = await Promise.all([
+        import('@/modules/users/queries'),
+        import('@/modules/roles/queries'),
+      ])
+      const { query, page } = parseListSearchParams(new URL(request.url).searchParams)
+      await Promise.all([
+        queryClient.ensureQueryData(
+          usersQueryOptions(services, { query, page, pageSize: USER_LIST_PAGE_SIZE }),
+        ),
+        queryClient.ensureQueryData(
+          roles.rolesQueryOptions(services, {
+            page: 1,
+            pageSize: roles.ROLE_OPTIONS_PAGE_SIZE,
+          }),
+        ),
+      ])
+    },
+    shouldRevalidate: shouldRevalidateListRoute,
   },
   {
     key: 'roles',
@@ -24,7 +51,15 @@ export const templateRoutes: RegisteredRoute[] = [
     subtitleKey: 'roles.subtitle',
     icon: 'shield-check',
     capability: capabilities.roles.read,
-    component: RoleListPage,
+    lazy: () => import('@/modules/roles/routes'),
+    preload: async ({ queryClient, request, services }) => {
+      const { ROLE_LIST_PAGE_SIZE, rolesQueryOptions } = await import('@/modules/roles/queries')
+      const { query, page } = parseListSearchParams(new URL(request.url).searchParams)
+      await queryClient.ensureQueryData(
+        rolesQueryOptions(services, { query, page, pageSize: ROLE_LIST_PAGE_SIZE }),
+      )
+    },
+    shouldRevalidate: shouldRevalidateListRoute,
   },
   {
     key: 'menus',
@@ -33,7 +68,7 @@ export const templateRoutes: RegisteredRoute[] = [
     subtitleKey: 'menus.subtitle',
     icon: 'menu',
     capability: capabilities.menus.read,
-    component: MenuTreePage,
+    lazy: () => import('@/modules/menus/routes'),
   },
 ]
 

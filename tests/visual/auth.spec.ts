@@ -1,10 +1,24 @@
 import { expect, test } from '@playwright/test'
+import {
+  expectVisualTheme,
+  setVisualTheme,
+  visualSnapshotName,
+  visualThemes,
+  visualViewports,
+} from './helpers'
 
-test('login page matches the neutral prototype skin', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.goto('/login')
-  await expect(page).toHaveScreenshot('login-desktop.png', {
-    animations: 'disabled',
-    fullPage: true,
-  })
-})
+for (const theme of visualThemes) {
+  for (const viewport of visualViewports) {
+    test(`login page - ${theme} - ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize(viewport)
+      await setVisualTheme(page, theme)
+      await page.goto('/login')
+      await expect(page.getByRole('heading', { name: '登录 Admin Workspace' })).toBeVisible()
+      await expectVisualTheme(page, theme)
+      await expect(page).toHaveScreenshot(visualSnapshotName('login', theme, viewport.name), {
+        animations: 'disabled',
+        fullPage: true,
+      })
+    })
+  }
+}

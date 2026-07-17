@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { User } from '@/core/services/contracts'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import {
   Dialog,
   DialogContent,
@@ -51,18 +52,23 @@ export function UserFormDialog({
             <DialogTitle>{t(user ? 'users.editTitle' : 'users.newTitle')}</DialogTitle>
             <DialogDescription>{t('users.subtitle')}</DialogDescription>
           </DialogHeader>
-          <div className="form-grid">
-            <label className="form-field">
-              <span className="form-label">{t('common.name')}</span>
-              <Input status={errors.name && 'error'} {...register('name')} />
-              {errors.name && <span className="form-error">{errors.name.message}</span>}
-            </label>
-            <label className="form-field">
-              <span className="form-label">{t('common.email')}</span>
-              <Input status={errors.email && 'error'} type="email" {...register('email')} />
-              {errors.email && <span className="form-error">{errors.email.message}</span>}
-            </label>
-          </div>
+          <FieldGroup className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+            <Field data-invalid={Boolean(errors.name)}>
+              <FieldLabel htmlFor="user-name">{t('common.name')}</FieldLabel>
+              <Input id="user-name" aria-invalid={Boolean(errors.name)} {...register('name')} />
+              <FieldError>{errors.name?.message ? t(errors.name.message) : null}</FieldError>
+            </Field>
+            <Field data-invalid={Boolean(errors.email)}>
+              <FieldLabel htmlFor="user-email">{t('common.email')}</FieldLabel>
+              <Input
+                id="user-email"
+                aria-invalid={Boolean(errors.email)}
+                type="email"
+                {...register('email')}
+              />
+              <FieldError>{errors.email?.message ? t(errors.email.message) : null}</FieldError>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
             <Button disabled={pending} type="submit" variant="primary">

@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type { HttpClient } from '@/core/http/client'
 import type {
   Capability,
@@ -8,17 +9,29 @@ import type {
   RoleInput,
   RoleServiceContract,
 } from '@/core/services/contracts'
-import { pageSchema, roleSchema } from './schemas'
+import { capabilitySchema, pageSchema } from './schemas'
+
+export const roleSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  code: z.string().min(1),
+  description: z.string(),
+  status: z.enum(['active', 'disabled']),
+  capabilities: z.array(capabilitySchema),
+  userCount: z.number().int().nonnegative(),
+})
+
+export type RoleResponse = z.infer<typeof roleSchema>
 
 export class RestRoleAdapter implements RoleServiceContract {
   constructor(private readonly client: HttpClient) {}
 
-  async list(params: ListParams = {}): Promise<PageResult<Role>> {
+  async list(params: ListParams = {}, signal?: AbortSignal): Promise<PageResult<Role>> {
     const query = new URLSearchParams()
     if (params.query) query.set('query', params.query)
     query.set('page', String(params.page ?? 1))
     query.set('pageSize', String(params.pageSize ?? 10))
-    return pageSchema(roleSchema).parse(await this.client.request('/roles?' + query))
+    return pageSchema(roleSchema).parse(await this.client.request('/roles?' + query, { signal }))
   }
 
   async create(input: RoleInput): Promise<Role> {

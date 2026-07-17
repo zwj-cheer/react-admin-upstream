@@ -6,7 +6,7 @@ import { useAuthStore } from '@/core/auth/authStore'
 import { useResolvePostLoginPath } from '@/core/routing'
 import { LocalLoginForm } from './LocalLoginForm'
 import { OidcLoginButton } from './OidcLoginButton'
-import type { ShellBranding } from '@/layouts/types'
+import type { ShellBranding } from '@/core/branding'
 
 export interface LoginPageProps {
   /** 品牌标识：name 来自 runtime.json 的 app.name，shortName/edition 来自编译期项目配置。 */
@@ -60,7 +60,7 @@ export function LoginPage({ branding }: LoginPageProps) {
           />
         )}
 
-        {showLocal && showOidc && <div className="login-divider">OR</div>}
+        {showLocal && showOidc && <div className="login-divider">{t('auth.or')}</div>}
 
         {showOidc && (
           <OidcLoginButton

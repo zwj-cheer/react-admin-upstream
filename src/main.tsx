@@ -1,3 +1,4 @@
+import '@/styles/tokens.css'
 import '@/styles/bootstrap.css'
 import { startApplication } from '@/bootstrap/startApplication'
 

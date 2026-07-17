@@ -4,9 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import type { Role } from '@/core/services/contracts'
 import { capabilities } from '@/core/permissions/capabilities'
+import { useListSearchParams } from '@/core/routing'
 import { Can } from '@/core/permissions/Can'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group'
 import { Switch } from '@/components/ui/switch'
 import { Tag } from '@/components/ui/tag'
 import { AsyncState } from '@/components/common/AsyncState'
@@ -14,6 +20,7 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { DataTable, type DataTableColumn } from '@/components/common/DataTable'
 import { Pagination } from '@/components/ui/pagination'
 import {
+  ROLE_LIST_PAGE_SIZE,
   useCreateRole,
   useRemoveRole,
   useRoles,
@@ -26,13 +33,12 @@ import { RolePermissionDialog } from './RolePermissionDialog'
 
 export function RoleListPage() {
   const { t } = useTranslation()
-  const [query, setQuery] = useState('')
-  const [page, setPage] = useState(1)
+  const { query, page, setQuery, setPage } = useListSearchParams()
   const [formOpen, setFormOpen] = useState(false)
   const [permissionOpen, setPermissionOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState<Role>()
-  const roles = useRoles({ query, page, pageSize: 8 })
+  const roles = useRoles({ query, page, pageSize: ROLE_LIST_PAGE_SIZE })
   const createRole = useCreateRole()
   const updateRole = useUpdateRole()
   const removeRole = useRemoveRole()
@@ -137,17 +143,24 @@ export function RoleListPage() {
     <section className="page-section">
       <div className="page-toolbar">
         <label className="toolbar-search">
-          <Input
-            allowClear
-            aria-label={t('common.search')}
-            placeholder={t('roles.searchPlaceholder')}
-            prefix={<Icon name="search" size={16} />}
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value)
-              setPage(1)
-            }}
-          />
+          <InputGroup>
+            <InputGroupAddon>
+              <Icon name="search" size={16} />
+            </InputGroupAddon>
+            <InputGroupInput
+              aria-label={t('common.search')}
+              placeholder={t('roles.searchPlaceholder')}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {query ? (
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton aria-label={t('common.clear')} onClick={() => setQuery('')}>
+                  <Icon name="x" size={14} />
+                </InputGroupButton>
+              </InputGroupAddon>
+            ) : null}
+          </InputGroup>
         </label>
         <Can capability={capabilities.roles.create}>
           <Button
@@ -173,7 +186,7 @@ export function RoleListPage() {
         <Pagination
           className="mt-4"
           current={roles.data?.page ?? page}
-          pageSize={roles.data?.pageSize ?? 8}
+          pageSize={roles.data?.pageSize ?? ROLE_LIST_PAGE_SIZE}
           total={roles.data?.total ?? 0}
           onChange={setPage}
         />
@@ -227,7 +240,7 @@ export function RoleListPage() {
           try {
             const returnToPreviousPage = page > 1 && roles.data?.items.length === 1
             await removeRole.mutateAsync(selectedRole.id)
-            if (returnToPreviousPage) setPage((current) => Math.max(1, current - 1))
+            if (returnToPreviousPage) setPage(Math.max(1, page - 1))
             setDeleteOpen(false)
             toast.success(t('common.operationSuccess'))
           } catch {

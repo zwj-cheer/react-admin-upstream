@@ -3,6 +3,9 @@ node_modules
 coverage
 test-results
 playwright-report
+pnpm-lock.yaml
 public/mockServiceWorker.js
 .reference
-
+.agents/skills
+.claude/skills
+.gemini/skills

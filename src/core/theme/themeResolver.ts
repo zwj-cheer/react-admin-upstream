@@ -3,7 +3,7 @@ import type { RuntimeConfig } from '@/core/config/runtimeConfig.schema'
 export type ThemePreference = RuntimeConfig['defaults']['theme']
 export type ResolvedTheme = Exclude<ThemePreference, 'system'>
 
-export const THEME_STORAGE_KEY = 'react-admin-template.theme'
+export const THEME_STORAGE_KEY = 'react-admin-template.theme:v1'
 
 export interface ThemeResolution {
   preference: ThemePreference

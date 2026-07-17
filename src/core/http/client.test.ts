@@ -42,4 +42,28 @@ describe('HttpClient', () => {
       expect.objectContaining({ kind: 'invalid-response' }),
     )
   })
+
+  it('propagates caller cancellation without converting it into a network error', async () => {
+    const controller = new AbortController()
+    const fetcher = vi.fn(
+      (_url: RequestInfo | URL, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () => {
+            reject(new DOMException('Aborted', 'AbortError'))
+          })
+        }),
+    )
+    const client = new HttpClient({
+      baseUrl: '/api',
+      timeoutMs: 1000,
+      csrfHeaderName: 'x-csrf-token',
+      fetcher,
+    })
+
+    const request = client.request('/users', { signal: controller.signal })
+    controller.abort()
+
+    await expect(request).rejects.toMatchObject({ name: 'AbortError' })
+    expect(fetcher.mock.calls[0][1]?.signal?.aborted).toBe(true)
+  })
 })

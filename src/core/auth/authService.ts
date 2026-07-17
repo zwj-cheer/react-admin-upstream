@@ -13,7 +13,7 @@ import {
   signoutOidc,
 } from './oidcAuth'
 
-const SOURCE_KEY = 'react-admin-template.auth-source'
+const SOURCE_KEY = 'react-admin-template.auth-source:v1'
 const MAX_TIMER_DELAY_MS = 2_147_483_647
 
 function readSource(): AuthSource | undefined {

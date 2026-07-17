@@ -16,5 +16,5 @@ export function RouteRegistryProvider({
   routes,
   children,
 }: PropsWithChildren<RouteRegistryProviderProps>) {
-  return <RouteRegistryContext.Provider value={routes}>{children}</RouteRegistryContext.Provider>
+  return <RouteRegistryContext value={routes}>{children}</RouteRegistryContext>
 }

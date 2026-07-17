@@ -17,19 +17,19 @@
 
 ## 2. 现状盘点
 
-| 文件 | 现状 | 结论 |
-| --- | --- | --- |
-| `table.tsx` | 已完成两层重构(高层 `Table` + `TableRoot` 基元) | 作为范式参考 |
-| `button.tsx` | cva 变体齐全(default/primary/outline-accent/ghost/danger × 三尺寸) | 小改:补 `loading` |
-| `input.tsx` | 原生透传 forwardRef | 增强(P0) |
-| `select.tsx` | 原生 `<select>` 透传 | 重构(P0) |
-| `dialog.tsx` | shadcn 基元散件,调用方手拼 footer | 加高层 `Modal`(P0) |
-| `dropdown-menu.tsx` | radix 基元散件 | 加高层 `Dropdown`(P1) |
-| `checkbox.tsx` / `switch.tsx` / `avatar.tsx` / `tooltip.tsx` | 够用 | 不动 |
-| `toast.tsx` | sonner 包装,`richColors` 与令牌体系脱节 | 小改(P2) |
-| `form.tsx` | 152B 占位 | 不做 antd Form(skill 已排除),保持现状 |
-| `common/Pagination.tsx` | 仅上一页/下一页;`table.tsx` 内还有一份内联分页,重复 | 升级并收敛(P0) |
-| `IconSprite.tsx` + `lucide-react` 混用 | 图标双体系分裂 | 统一(P0,见 §4) |
+| 文件                                                         | 现状                                                               | 结论                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------- |
+| `table.tsx`                                                  | 已完成两层重构(高层 `Table` + `TableRoot` 基元)                    | 作为范式参考                          |
+| `button.tsx`                                                 | cva 变体齐全(default/primary/outline-accent/ghost/danger × 三尺寸) | 小改:补 `loading`                     |
+| `input.tsx`                                                  | 原生透传 forwardRef                                                | 增强(P0)                              |
+| `select.tsx`                                                 | 原生 `<select>` 透传                                               | 重构(P0)                              |
+| `dialog.tsx`                                                 | shadcn 基元散件,调用方手拼 footer                                  | 加高层 `Modal`(P0)                    |
+| `dropdown-menu.tsx`                                          | radix 基元散件                                                     | 加高层 `Dropdown`(P1)                 |
+| `checkbox.tsx` / `switch.tsx` / `avatar.tsx` / `tooltip.tsx` | 够用                                                               | 不动                                  |
+| `toast.tsx`                                                  | sonner 包装,`richColors` 与令牌体系脱节                            | 小改(P2)                              |
+| `form.tsx`                                                   | 152B 占位                                                          | 不做 antd Form(skill 已排除),保持现状 |
+| `common/Pagination.tsx`                                      | 仅上一页/下一页;`table.tsx` 内还有一份内联分页,重复                | 升级并收敛(P0)                        |
+| `IconSprite.tsx` + `lucide-react` 混用                       | 图标双体系分裂                                                     | 统一(P0,见 §4)                        |
 
 原型中出现、但仓库**没有**对应组件的高频形态(扩展目标,见 §5):
 标签 `tbl-tag/ov-bal-tag`、分段切换 `ch-seg`、进度条 `ov-bal-pb`、统计卡 `ost`、
@@ -39,14 +39,14 @@
 
 原型 `shared.css` 变量与仓库令牌已一一对应,组件实现时按此翻译,**禁止出现原型变量名或 hex**:
 
-| 原型 | 仓库令牌 | 用途 |
-| --- | --- | --- |
-| `--gold` / `--goldl` | `--gold` / `--gold-light` | 主强调色 / 浅金底 |
-| `--t1/t2/t3` | `--t1/t2/t3` | 文字三级 |
-| `--bdr` / `--bdrm` | `--border` / `--border-strong` | 边框 |
-| `--card` / `--bg` | `--card` / `--bg` | 卡片 / 页面底 |
-| `--greenl/bluel/purplel/orangel` + 主色 | `--green-light/...` + 主色 | 语义色标签 |
-| `--shmd` | `--shadow-md` | 浮层阴影 |
+| 原型                                    | 仓库令牌                       | 用途              |
+| --------------------------------------- | ------------------------------ | ----------------- |
+| `--gold` / `--goldl`                    | `--gold` / `--gold-light`      | 主强调色 / 浅金底 |
+| `--t1/t2/t3`                            | `--t1/t2/t3`                   | 文字三级          |
+| `--bdr` / `--bdrm`                      | `--border` / `--border-strong` | 边框              |
+| `--card` / `--bg`                       | `--card` / `--bg`              | 卡片 / 页面底     |
+| `--greenl/bluel/purplel/orangel` + 主色 | `--green-light/...` + 主色     | 语义色标签        |
+| `--shmd`                                | `--shadow-md`                  | 浮层阴影          |
 
 通用尺寸基调(来自原型实测):卡片圆角 14–16px、控件圆角 8–10px、正文 13px、
 辅助文字 12px、表头/眉标 11px 大写 + letter-spacing、控件内边距 7–9px × 10–16px。
@@ -82,6 +82,7 @@
 #### 5.1 Icon —— 见 §4 ✅ 2026-07-14
 
 实际偏差记录:
+
 - 补入 sprite 的 symbol 共 7 个(计划列 5 个,另加 `chevron-up`、`logout`)。`logout` 直接
   取自原型 `assets/icons.svg` 的 `icon-logout`(同源笔触,非 lucide 拷贝)。
 - `size` 联合额外含 `24`:状态页大图标圆底(`.status-page__icon`,对齐原型
@@ -91,9 +92,10 @@
 - `src/components/ui/` 内部 lucide(checkbox/dialog/table 的 check、x、chevron)按方案
   保留,不属于业务代码。
 - 视觉基线因图标线宽变化按预期更新(`pnpm exec playwright test --project=visual
-  --update-snapshots`),5 条基线全部重录并复跑通过。
+--update-snapshots`),5 条基线全部重录并复跑通过。
 
 #### 5.2 Pagination(升级 + 收敛) ✅ 2026-07-14
+
 - **antd 子集**:`current/pageSize/total/onChange`、页码按钮 + 省略号折叠(siblingCount=1)、
   `showTotal`(默认 i18n `common.pageInfo`)、`disabled`。非目标:pageSize 切换、快跳输入。
 - **原型样式**:`.pg`——居中、gap 8、13px、`--t2`;当前页按钮 `--gold` 底白字。
@@ -102,6 +104,7 @@
 - **移动端**:页码折叠为「上一页 / x/y / 下一页」(390px 下省略页码按钮),内建降级。
 
 实际偏差记录:
+
 - `showTotal` 做成布尔开关(文案固定 i18n `common.pageInfo`),不支持 antd 的函数式签名;
   汇总文案在 <640px 隐藏,由「x / y」摘要取代。
 - 移动端断点用 Tailwind `sm`(640px)而非 390px:`max-sm:hidden` 收页码按钮,与仓库既有
@@ -111,6 +114,7 @@
 - 视觉基线因分页样式变化重录 5 条并复跑通过;`pnpm e2e` 7 条全过。
 
 #### 5.3 Input(单层增强) ✅ 2026-07-14
+
 - **antd 子集**:`allowClear`、`prefix/suffix`(ReactNode)、`status: 'error'`、
   `size: 'middle' | 'small'`。非目标:TextArea/Password/addon。
 - **硬约束**:保持 forwardRef 兼容 react-hook-form `register`(LocalLoginForm、FormDialog 系列)。
@@ -119,6 +123,7 @@
 - **移动端**:天然自适应。
 
 实际偏差记录:
+
 - 无装饰 props 时渲染裸 `<input>`,DOM 与增强前完全一致(不引入包装节点),存量表单零影响;
   有 `prefix/suffix/allowClear` 时才外包 `relative` 容器。
 - `allowClear` 通过原生 value setter + `input` 事件派发实现清除,受控用法与 react-hook-form
@@ -131,6 +136,7 @@
 - 视觉基线无 diff(默认态样式不变),5 条基线直接通过,未重录。
 
 #### 5.4 Select(两层重构) ✅ 2026-07-14
+
 - 现原生 `<select>` 改名 `SelectNative` 保留;高层 `Select` 基于 radix Select/Popover。
 - **antd 子集**:`options: {label, value, disabled?}[]`、`value/onChange`、`placeholder`、
   `allowClear`、`showSearch`(本地 label 过滤)、`mode: 'multiple'`(选中项浅金 tag)、
@@ -141,6 +147,7 @@
 - **移动端**:radix 面板自适应;390px 下面板宽度撑满触发器宽,不做抽屉化。
 
 实际偏差记录:
+
 - 高层 `Select` 基于 radix **Popover**(非 radix Select):radix Select 不支持多选,
   为统一单/多选与 showSearch 的实现选 Popover;键盘方向键为浏览器默认焦点行为,
   未实现 typeahead。
@@ -156,6 +163,7 @@
   (system-admin 用例实走 MenuFormDialog 创建流程)。
 
 #### 5.5 Modal(dialog.tsx 加高层) ✅ 2026-07-14
+
 - 基元(`Dialog*`)全部保留不改名。
 - **antd 子集**:`open/onOpenChange`、`title`、`onOk/onCancel`、`okText/cancelText`
   (默认 i18n `common.confirm/cancel`)、`confirmLoading`、`okDanger`(危险确认,红底)、
@@ -167,6 +175,7 @@
   提交语义,评估后可保留基元用法(写明原因即可,不强迁)。
 
 实际偏差记录:
+
 - `onOk` 不自动关闭弹窗、不吞 Promise 错误:关闭时机由调用方掌控(与 antd 的
   「resolve 即关」不同),JSDoc 写明。取消路径(遮罩/Escape/X/取消按钮)统一走
   `onCancel?.()` → `onOpenChange(false)`。
@@ -182,6 +191,7 @@
 ### P1(高频扩展)
 
 #### 5.6 Tag ✅ 2026-07-14
+
 - **antd 子集**:`color: 'gold' | 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'default'`、
   `icon?`、`closable/onClose`。cva 变体实现。
 - **原型样式**:`.tbl-tag`——3px×7px 内边距、6px 圆角、11px、`--Xxx-light` 底 + 主色字;
@@ -190,6 +200,7 @@
   User/Role 列表状态列迁移后删旧类。
 
 实际偏差记录:
+
 - 迁移范围含 MenuTreePage(计划只列 User/Role):状态列 + 「未知路由」徽标共 4 处,
   `.status-badge` 类与其 `data-status` 变体全部删除,grep 零残留。
 - 呼吸点动画 `tag-pulse`(opacity 1↔0.35,2s)加在 `components.css`,用 Tailwind
@@ -200,12 +211,14 @@
   呼吸点,视觉基线 5 条按预期重录并复跑通过。
 
 #### 5.7 Segmented(分段切换) ✅ 2026-07-14
+
 - **antd 子集**:`options: {label, value}[]`、`value/onChange`、`size`。受控,无非受控形态。
 - **原型样式**:`.ch-seg`——`--bg` 底 + 边框圆角 8px 外壳,按钮 5px×12px,激活项
   `--card` 底 + 金字 + 细阴影。原型高频形态(图表日/周/月/年切换)。
 - **移动端**:超宽时横向滚动。
 
 实际偏差记录:
+
 - 无迁移目标(仓库当前无分段场景),纯新增待用;`role=radiogroup/radio` +
   `aria-checked` 语义,点击已激活项不回调。
 - **附带修复(影响全局)**:发现 `base.css` 的 `button { color: inherit }` 非分层规则
@@ -215,6 +228,7 @@
   恢复正确,视觉基线 5 条整体重录。陷阱已回写 skill。
 
 #### 5.8 Dropdown(dropdown-menu.tsx 加高层) ✅ 2026-07-14
+
 - **antd 子集**:`menu: {items: {key, label, icon?, danger?, disabled?, type?: 'divider'}[], onClick(key)}`、
   `placement`(bottomLeft/bottomRight/topLeft/topRight → radix side/align)、`disabled`。
   非目标:多级子菜单、hover 触发。danger 项 `--red` 字。
@@ -222,6 +236,7 @@
 - **迁移**:`AccountMenu` 评估迁移,复杂自定义内容保留基元。
 
 实际偏差记录:
+
 - `AccountMenu` 评估后**保留基元**:含用户信息头(Label + disabled 邮箱项 + 分隔线)
   的自定义结构,且两项动作各带副作用(开弹窗/登出),`menu.onClick(key)` 单回调模型
   无净收益;计划本身允许此结论。
@@ -232,12 +247,14 @@
   (radix 菜单在 jsdom 用 pointerDown 触发)。
 
 #### 5.9 Popconfirm ✅ 2026-07-14
+
 - **antd 子集**:`title`、`onConfirm/onCancel`、`okText/cancelText`(i18n 默认)、
   `okDanger`。基于 radix Popover,面板样式对齐 `.multi-drop`(8px 圆角、shadow-md)。
 - **场景**:行内轻量删除确认(重量级仍用 `ConfirmDialog`)。二者分工写进 JSDoc:
   不可恢复/批量 → Modal;单行可撤销级 → Popconfirm。
 
 实际偏差记录:
+
 - open 状态组件内部持有(非受控)——Popconfirm 语义上就是「点开即问」,不需要调用方
   管理 open;这是本批组件里唯一的非受控例外,理由写入实现。
 - 异步确认:`onConfirm` 返回 Promise 时等待完成才关面板(期间确认按钮禁用),
@@ -248,6 +265,7 @@
 - 仓库当前无行内轻量确认场景,纯新增待用,无迁移。
 
 #### 5.10 Empty + Spin ✅ 2026-07-14
+
 - `Empty`:`description?`(默认 i18n `common.empty`)、`icon?`;样式对齐 `.async-state`
   (220px 最小高、居中、`--t3`)。`AsyncState` 内部空态改用它。
 - `Spin`:`spinning`、`children?`(包裹模式 = 半透明遮罩,复用 `Table` loading 层的实现,
@@ -255,6 +273,7 @@
 - **迁移**:`table.tsx` 的 loading 遮罩改用 `Spin` 包裹模式,消除重复。
 
 实际偏差记录:
+
 - `Empty` 增补 `children` slot(空态下常见「新建」按钮位)与 `className`
   (AsyncState 场景外允许收紧最小高)。
 - `Spin` 单独模式 `spinning=false` 渲染 null(antd 是包裹模式概念,单独模式为本仓扩展);
@@ -265,16 +284,16 @@
 
 ### P2(增益项,按需)
 
-| 组件 | antd 子集 | 原型对应 | 说明 |
-| --- | --- | --- | --- |
-| Card | `title/extra/children`,`hoverable` | `.card` / `.sec-hd`(标题 + 右侧动作) | 现散落 `.card` 语义类,组件化后统一节标题形态 |
-| Statistic | `title/value/suffix/trend` | `.ost`(图标 + 标签 + 大数字 + 副文) | 仪表盘统计卡,`trend` 上/下用 green/red |
-| Progress | `percent/status`,渐变条 | `.ov-bal-pb`(金→橙渐变、12px 高、6px 圆角) | shimmer 动效可选,`prefers-reduced-motion` 关闭 |
-| Tabs | `items/activeKey/onChange` | 原型账号页横向 tab | radix Tabs 包装 |
-| Alert | `type: info/success/warning/error`、`message` | `.rc-note`(浅金底提示块) | 四语义色 × `-light` 底 |
-| DatePicker | 先做 `<Input type="date">` 增强版(range 由两个组成) | `.filter-bar input[type=date]` | 完整日历面板成本高,先不做,列为非目标 |
-| Toaster 调色 ✅ 2026-07-14 | — | — | 实现走 `components.css` 的 `[data-sonner-toast]` 令牌规则(非 toastOptions,CSS 更薄);语义底用 `color-mix(主色 10%, --card)` 保证不透明,双主题实测 |
-| Button loading ✅ 2026-07-14 | `loading` prop(转圈 + 禁用) | `.btn` 加载态 | 已接入 Modal `confirmLoading`;asChild 下仅禁用不注入转圈 |
+| 组件                         | antd 子集                                           | 原型对应                                   | 说明                                                                                                                                             |
+| ---------------------------- | --------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card                         | `title/extra/children`,`hoverable`                  | `.card` / `.sec-hd`(标题 + 右侧动作)       | 现散落 `.card` 语义类,组件化后统一节标题形态                                                                                                     |
+| Statistic                    | `title/value/suffix/trend`                          | `.ost`(图标 + 标签 + 大数字 + 副文)        | 仪表盘统计卡,`trend` 上/下用 green/red                                                                                                           |
+| Progress                     | `percent/status`,渐变条                             | `.ov-bal-pb`(金→橙渐变、12px 高、6px 圆角) | shimmer 动效可选,`prefers-reduced-motion` 关闭                                                                                                   |
+| Tabs                         | `items/activeKey/onChange`                          | 原型账号页横向 tab                         | radix Tabs 包装                                                                                                                                  |
+| Alert                        | `type: info/success/warning/error`、`message`       | `.rc-note`(浅金底提示块)                   | 四语义色 × `-light` 底                                                                                                                           |
+| DatePicker                   | 先做 `<Input type="date">` 增强版(range 由两个组成) | `.filter-bar input[type=date]`             | 完整日历面板成本高,先不做,列为非目标                                                                                                             |
+| Toaster 调色 ✅ 2026-07-14   | —                                                   | —                                          | 实现走 `components.css` 的 `[data-sonner-toast]` 令牌规则(非 toastOptions,CSS 更薄);语义底用 `color-mix(主色 10%, --card)` 保证不透明,双主题实测 |
+| Button loading ✅ 2026-07-14 | `loading` prop(转圈 + 禁用)                         | `.btn` 加载态                              | 已接入 Modal `confirmLoading`;asChild 下仅禁用不注入转圈                                                                                         |
 
 **明确不做**:antd Form(skill 已排除)、Upload、Transfer、Cascader、TreeSelect、
 完整 DatePicker 日历面板、Modal 移动端 sheet 化(单列后续项)。无场景不预建。

@@ -1,20 +1,46 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Capability, EntityStatus, ListParams, RoleInput } from '@/core/services/contracts'
+import {
+  keepPreviousData,
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import type {
+  Capability,
+  EntityStatus,
+  ListParams,
+  RoleInput,
+  Services,
+} from '@/core/services/contracts'
 import { useServices } from '@/core/services/useServices'
+
+export const ROLE_LIST_PAGE_SIZE = 8
+export const ROLE_OPTIONS_PAGE_SIZE = 100
+
+export const roleKeys = {
+  all: ['roles'] as const,
+  list: (params: ListParams) => [...roleKeys.all, 'list', params] as const,
+}
+
+/** 可被组件、路由 loader 与预取逻辑共同复用的角色列表查询配置。 */
+export function rolesQueryOptions(services: Services, params: ListParams) {
+  return queryOptions({
+    queryKey: roleKeys.list(params),
+    queryFn: ({ signal }) => services.roles.list(params, signal),
+    placeholderData: keepPreviousData,
+  })
+}
 
 export function useRoles(params: ListParams) {
   const services = useServices()
-  return useQuery({
-    queryKey: ['roles', params],
-    queryFn: () => services.roles.list(params),
-  })
+  return useQuery(rolesQueryOptions(services, params))
 }
 
 function useRoleMutation<T>(mutationFn: (input: T) => Promise<unknown>) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: roleKeys.all }),
   })
 }
 

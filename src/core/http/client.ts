@@ -17,6 +17,7 @@ export interface RequestOptions {
   body?: unknown
   authSource?: AuthSource
   notifyUnauthorized?: boolean
+  signal?: AbortSignal
 }
 
 function joinUrl(baseUrl: string, path: string): string {
@@ -38,7 +39,17 @@ export class HttpClient {
     const method = options.method ?? 'GET'
     const authSource = options.authSource ?? getTransportAuthSource() ?? 'local'
     const controller = new AbortController()
-    const timeout = window.setTimeout(() => controller.abort(), this.options.timeoutMs)
+    let timedOut = false
+    const timeout = globalThis.setTimeout(() => {
+      timedOut = true
+      controller.abort()
+    }, this.options.timeoutMs)
+    const abortFromCaller = () => controller.abort(options.signal?.reason)
+    if (options.signal?.aborted) {
+      abortFromCaller()
+    } else {
+      options.signal?.addEventListener('abort', abortFromCaller, { once: true })
+    }
     const headers = new Headers({ Accept: 'application/json' })
 
     if (options.body !== undefined) {
@@ -69,12 +80,16 @@ export class HttpClient {
         signal: controller.signal,
       })
     } catch (error) {
+      if (options.signal?.aborted) {
+        throw error
+      }
       if (error instanceof DOMException && error.name === 'AbortError') {
-        throw new HttpError('timeout')
+        throw new HttpError(timedOut ? 'timeout' : 'network')
       }
       throw new HttpError('network')
     } finally {
-      window.clearTimeout(timeout)
+      globalThis.clearTimeout(timeout)
+      options.signal?.removeEventListener('abort', abortFromCaller)
     }
 
     if (!response.ok) {

@@ -1,20 +1,29 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { EntityStatus, MenuInput } from '@/core/services/contracts'
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { EntityStatus, MenuInput, Services } from '@/core/services/contracts'
 import { useServices } from '@/core/services/useServices'
+
+export const menuKeys = {
+  all: ['menus'] as const,
+}
+
+/** 可被组件、路由 loader 与预取逻辑共同复用的菜单查询配置。 */
+export function menusQueryOptions(services: Services) {
+  return queryOptions({
+    queryKey: menuKeys.all,
+    queryFn: ({ signal }) => services.menus.list(signal),
+  })
+}
 
 export function useMenus() {
   const services = useServices()
-  return useQuery({
-    queryKey: ['menus'],
-    queryFn: () => services.menus.list(),
-  })
+  return useQuery(menusQueryOptions(services))
 }
 
 function useMenuMutation<T>(mutationFn: (input: T) => Promise<unknown>) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['menus'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: menuKeys.all }),
   })
 }
 

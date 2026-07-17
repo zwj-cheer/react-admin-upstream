@@ -70,6 +70,7 @@ describe('Table', () => {
     )
     fireEvent.click(screen.getByText('名称'))
     expect(onSortChange).toHaveBeenCalledWith('name', 'ascend')
+    expect(bodyTexts()).toEqual(['甲', '乙', '丙'])
   })
 
   it('paginates locally and reports page changes', () => {
@@ -86,6 +87,18 @@ describe('Table', () => {
     expect(screen.getByText('上一页')).toBeDisabled()
     fireEvent.click(screen.getByText('下一页'))
     expect(onChange).toHaveBeenCalledWith(2)
+  })
+
+  it('keeps server-provided current-page rows when total exceeds the page data', () => {
+    render(
+      <Table
+        columns={columns}
+        dataSource={rows.slice(1)}
+        pagination={{ current: 2, pageSize: 2, total: 6, onChange: vi.fn() }}
+        rowKey={(row) => row.id}
+      />,
+    )
+    expect(bodyTexts()).toEqual(['乙', '丙'])
   })
 
   it('selects rows and toggles all through the header checkbox', () => {

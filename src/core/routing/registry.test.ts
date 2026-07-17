@@ -10,7 +10,7 @@ function route(key: string, path: string, capability: string): RegisteredRoute {
     subtitleKey: key + '.subtitle',
     icon: 'menu',
     capability,
-    component: () => null,
+    lazy: async () => ({ Component: () => null }),
   }
 }
 

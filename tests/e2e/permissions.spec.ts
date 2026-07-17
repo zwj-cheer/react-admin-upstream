@@ -5,7 +5,7 @@ test('a read-only session hides mutations and backend access stays capability ba
 }) => {
   await page.addInitScript(() => {
     sessionStorage.setItem(
-      'react-admin-template.mock-session',
+      'react-admin-template.mock-session:v1',
       JSON.stringify({ source: 'local', userId: 'user-audit' }),
     )
   })

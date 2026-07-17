@@ -1,28 +1,25 @@
-import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { loginAsAdmin } from '../e2e/helpers'
+import { loginAsAdmin, navigateToAdminPage } from '../e2e/helpers'
+import { createAxeBuilder, expectNoA11yViolations } from './helpers'
 
 test('role dialog remains keyboard and screen-reader compatible', async ({ page }) => {
   await loginAsAdmin(page)
-  await page.getByRole('link', { name: '角色管理' }).click()
+  await navigateToAdminPage(page, '角色管理')
   await page.getByRole('button', { name: '新建' }).click()
-  await page.waitForTimeout(250)
-  const results = await new AxeBuilder({ page })
-    .include('.dialog-content')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze()
-  expect(
-    results.violations.filter((violation) =>
-      ['serious', 'critical'].includes(violation.impact ?? ''),
-    ),
-  ).toEqual([])
+  const dialog = page.getByRole('dialog', { name: '新建角色' })
+  await expect(dialog).toBeVisible()
+  await dialog.evaluate((element) =>
+    Promise.all(element.getAnimations().map((animation) => animation.finished)),
+  )
+  const results = await createAxeBuilder(page).include('[role="dialog"]').analyze()
+  expectNoA11yViolations(results)
 })
 
 test('management status switches expose the affected item in their name', async ({ page }) => {
   await loginAsAdmin(page)
-  await page.getByRole('link', { name: '角色管理' }).click()
+  await navigateToAdminPage(page, '角色管理')
   await expect(page.getByRole('switch', { name: '超级管理员 状态' })).toBeVisible()
 
-  await page.getByRole('link', { name: '菜单管理' }).click()
+  await navigateToAdminPage(page, '菜单管理')
   await expect(page.getByRole('switch', { name: '用户管理 状态' })).toBeVisible()
 })

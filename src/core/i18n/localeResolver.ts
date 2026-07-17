@@ -2,7 +2,7 @@ import type { Locale as RuntimeLocale } from '@/core/config/runtimeConfig.schema
 
 export type Locale = RuntimeLocale
 
-export const LOCALE_STORAGE_KEY = 'react-admin-template.locale'
+export const LOCALE_STORAGE_KEY = 'react-admin-template.locale:v1'
 
 export function normalizeLocale(value: unknown): Locale | undefined {
   if (typeof value !== 'string') {

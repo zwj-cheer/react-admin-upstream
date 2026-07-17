@@ -32,18 +32,18 @@ describe('datetime lint guard fidelity', () => {
   })
 
   it('blocks Intl.DateTimeFormat in both constructed and callable forms', async () => {
-    expect(
-      await messagesFor('export const x = new Intl.DateTimeFormat("zh-CN")'),
-    ).toContain('no-restricted-syntax')
+    expect(await messagesFor('export const x = new Intl.DateTimeFormat("zh-CN")')).toContain(
+      'no-restricted-syntax',
+    )
     expect(await messagesFor('export const x = Intl.DateTimeFormat("zh-CN")')).toContain(
       'no-restricted-syntax',
     )
   })
 
   it('blocks toLocaleString family on values', async () => {
-    expect(
-      await messagesFor('export const x = new Date().toLocaleDateString("zh-CN")'),
-    ).toContain('no-restricted-syntax')
+    expect(await messagesFor('export const x = new Date().toLocaleDateString("zh-CN")')).toContain(
+      'no-restricted-syntax',
+    )
   })
 
   it('does not flag the sanctioned @/core/datetime entry point', async () => {

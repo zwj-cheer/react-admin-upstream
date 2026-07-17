@@ -1,17 +1,26 @@
 import { expect, test } from '@playwright/test'
 import { loginAsAdmin } from '../e2e/helpers'
+import {
+  expectVisualTheme,
+  setVisualTheme,
+  visualSnapshotName,
+  visualThemes,
+  visualViewports,
+} from './helpers'
 
-for (const viewport of [
-  { name: 'desktop', width: 1440, height: 900 },
-  { name: 'tablet', width: 768, height: 1024 },
-  { name: 'mobile', width: 390, height: 844 },
-]) {
-  test('users shell - ' + viewport.name, async ({ page }) => {
-    await page.setViewportSize(viewport)
-    await loginAsAdmin(page)
-    await expect(page).toHaveScreenshot('users-' + viewport.name + '.png', {
-      animations: 'disabled',
-      fullPage: true,
+for (const theme of visualThemes) {
+  for (const viewport of visualViewports) {
+    test(`users shell - ${theme} - ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize(viewport)
+      await setVisualTheme(page, theme)
+      await loginAsAdmin(page)
+      await expect(page.getByRole('heading', { name: '用户管理' })).toBeVisible()
+      await expect(page.getByRole('navigation', { name: '分页' })).toBeVisible()
+      await expectVisualTheme(page, theme)
+      await expect(page).toHaveScreenshot(visualSnapshotName('users', theme, viewport.name), {
+        animations: 'disabled',
+        fullPage: true,
+      })
     })
-  })
+  }
 }

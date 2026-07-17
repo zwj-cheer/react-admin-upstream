@@ -1,7 +1,27 @@
 import type { ComponentType } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
+import type { ShouldRevalidateFunction } from 'react-router'
 import { matchPath } from 'react-router'
-import type { Session } from '@/core/services/contracts'
+import type { Services, Session } from '@/core/services/contracts'
 import { authorize } from '@/core/permissions/authorize'
+
+/** 注册路由按需加载的模块形态。 */
+export interface RegisteredRouteModule {
+  /** 路由页面组件。 */
+  Component: ComponentType
+  /** 可选的页面级错误边界。 */
+  ErrorBoundary?: ComponentType
+}
+
+/** 注册路由 loader 可用的应用级基础设施。 */
+export interface RegisteredRoutePreloadContext {
+  /** 当前导航请求，可读取 URL 与 AbortSignal。 */
+  request: Request
+  /** 应用唯一的 TanStack Query 缓存。 */
+  queryClient: QueryClient
+  /** 后端无关服务端口。 */
+  services: Services
+}
 
 /** 单条已注册路由的元数据，模板与下游项目共用同一份结构。 */
 export interface RegisteredRoute {
@@ -20,8 +40,12 @@ export interface RegisteredRoute {
   icon: string
   /** 访问该路由所需的能力标识。 */
   capability: string
-  /** 页面组件。 */
-  component: ComponentType
+  /** 按需加载 route module；路径必须保持静态可分析。 */
+  lazy: () => Promise<RegisteredRouteModule>
+  /** 可选的数据预取；由 app 层转换为 React Router loader。 */
+  preload?: (context: RegisteredRoutePreloadContext) => Promise<unknown>
+  /** 可选的 loader 重验证策略。 */
+  shouldRevalidate?: ShouldRevalidateFunction
 }
 
 /**

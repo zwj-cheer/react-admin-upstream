@@ -5,7 +5,8 @@
   "errors": {
     "notFoundTitle": "页面不存在",
     "notFoundBody": "请求的路由未被当前前端注册。",
-    "backToApp": "返回应用"
+    "backToApp": "返回应用",
+    "routeLoadBody": "页面数据加载失败，请检查网络连接后重试。"
   },
   "common": {
     "add": "新建",
@@ -24,12 +25,7 @@
     "retry": "重试",
     "clear": "清除",
     "close": "关闭",
-    "deselect": "取消选择 {{label}}",
     "pagination": "分页",
-    "progress": "进度",
-    "slider": "滑块",
-    "otpInput": "验证码输入",
-    "otpDigit": "验证码第 {{index}} 位",
     "moveUp": "上移",
     "moveDown": "下移",
     "previous": "上一页",
@@ -64,6 +60,7 @@
   "a11y": {
     "openNavigation": "打开导航菜单",
     "primaryNavigation": "主导航",
+    "navigationDescription": "浏览当前账号有权访问的应用页面",
     "switchLanguage": "切换语言",
     "userMenu": "用户菜单",
     "themeLight": "切换主题：当前为浅色",
@@ -77,7 +74,22 @@
     "themeLight": "浅色",
     "themeDark": "深色",
     "themeSystem": "跟随系统",
-    "language": "语言"
+    "language": "语言",
+    "languageZhCn": "简体中文",
+    "languageEnUs": "English"
+  },
+  "validation": {
+    "nameMin": "名称至少需要 2 个字符",
+    "nameMax": "名称不能超过 50 个字符",
+    "email": "请输入有效的邮箱地址",
+    "codeMin": "编码至少需要 2 个字符",
+    "codeMax": "编码不能超过 40 个字符",
+    "codePattern": "编码必须以小写字母开头，且只能包含小写字母、数字、下划线或连字符",
+    "descriptionMax": "说明不能超过 200 个字符",
+    "routeRequired": "请选择前端路由",
+    "iconRequired": "请输入图标名称",
+    "iconMax": "图标名称不能超过 40 个字符",
+    "passwordMin": "密码至少需要 8 个字符"
   },
   "auth": {
     "title": "登录 {{name}}",
@@ -86,6 +98,7 @@
     "password": "密码",
     "localLogin": "账号密码登录",
     "oidcLogin": "使用组织账号登录",
+    "or": "或",
     "logout": "退出登录",
     "demoHint": "开发环境已启用 Mock 登录",
     "restoring": "正在恢复会话…",

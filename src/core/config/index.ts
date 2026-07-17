@@ -1,6 +1,0 @@
-export { RuntimeConfigProvider, useRuntimeConfig } from './RuntimeConfigProvider'
-export { parseRuntimeConfig, RuntimeConfigError, developmentRuntimeConfig } from './runtimeConfig'
-export type { RuntimeConfigValidationContext } from './runtimeConfig'
-export type { RuntimeConfig, RuntimeConfigInput, Locale } from './runtimeConfig.schema'
-export { findTrustedOrigin } from './trustedOrigins'
-export type { TrustedOriginPolicy, TrustedOriginUsage } from './trustedOrigins'

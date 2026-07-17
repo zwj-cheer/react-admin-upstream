@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import type { Role } from '@/core/services/contracts'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import {
   Dialog,
   DialogContent,
@@ -55,27 +57,37 @@ export function RoleFormDialog({
             <DialogTitle>{t(role ? 'roles.editTitle' : 'roles.newTitle')}</DialogTitle>
             <DialogDescription>{t('roles.subtitle')}</DialogDescription>
           </DialogHeader>
-          <div className="form-grid">
-            <label className="form-field">
-              <span className="form-label">{t('common.name')}</span>
-              <Input status={errors.name && 'error'} {...register('name')} />
-              {errors.name && <span className="form-error">{errors.name.message}</span>}
-            </label>
-            <label className="form-field">
-              <span className="form-label">{t('common.code')}</span>
+          <FieldGroup className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+            <Field data-invalid={Boolean(errors.name)}>
+              <FieldLabel htmlFor="role-name">{t('common.name')}</FieldLabel>
+              <Input id="role-name" aria-invalid={Boolean(errors.name)} {...register('name')} />
+              <FieldError>{errors.name?.message ? t(errors.name.message) : null}</FieldError>
+            </Field>
+            <Field data-invalid={Boolean(errors.code)}>
+              <FieldLabel htmlFor="role-code">{t('common.code')}</FieldLabel>
               <Input
+                id="role-code"
                 disabled={role?.code === 'admin'}
-                status={errors.code && 'error'}
+                aria-invalid={Boolean(errors.code)}
                 {...register('code')}
               />
-              {errors.code && <span className="form-error">{errors.code.message}</span>}
-            </label>
-          </div>
-          <label className="form-field" style={{ marginTop: 16 }}>
-            <span className="form-label">{t('common.description')}</span>
-            <textarea className="ui-textarea" {...register('description')} />
-            {errors.description && <span className="form-error">{errors.description.message}</span>}
-          </label>
+              <FieldError>{errors.code?.message ? t(errors.code.message) : null}</FieldError>
+            </Field>
+            <Field
+              className="col-span-2 max-md:col-span-1"
+              data-invalid={Boolean(errors.description)}
+            >
+              <FieldLabel htmlFor="role-description">{t('common.description')}</FieldLabel>
+              <Textarea
+                id="role-description"
+                aria-invalid={Boolean(errors.description)}
+                {...register('description')}
+              />
+              <FieldError>
+                {errors.description?.message ? t(errors.description.message) : null}
+              </FieldError>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
             <Button disabled={pending} type="submit" variant="primary">

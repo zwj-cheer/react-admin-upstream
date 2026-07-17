@@ -1,4 +1,15 @@
 import { useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingFn,
+  type SortingState,
+} from '@tanstack/react-table'
 import { Icon } from '@/components/ui/icon'
 import { useTranslation } from 'react-i18next'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -216,42 +227,70 @@ export function Table<T>({
   className,
 }: TableProps<T>) {
   const { t } = useTranslation()
-  const [sort, setSort] = useState<{ key: string; order: SortOrder }>({ key: '', order: null })
-
-  const sorted = useMemo(() => {
-    const column = columns.find((item) => item.key === sort.key)
-    if (!sort.order || typeof column?.sorter !== 'function') return dataSource
-    const compare = column.sorter
-    const flip = sort.order === 'descend' ? -1 : 1
-    return [...dataSource].sort((a, b) => compare(a, b) * flip)
-  }, [columns, dataSource, sort])
-
   const total = pagination ? (pagination.total ?? dataSource.length) : dataSource.length
-  const rows =
-    pagination && dataSource.length > pagination.pageSize
-      ? sorted.slice(
-          (pagination.current - 1) * pagination.pageSize,
-          pagination.current * pagination.pageSize,
-        )
-      : sorted
-
-  const selected = new Set(rowSelection?.selectedRowKeys)
-  const allChecked = rows.length > 0 && rows.every((row) => selected.has(rowKey(row)))
-  const someChecked = rows.some((row) => selected.has(rowKey(row)))
-  const emitSelection = (keys: Set<string>) => {
-    rowSelection?.onChange(
-      [...keys],
-      dataSource.filter((row) => keys.has(rowKey(row))),
-    )
-  }
-  const toggleAll = (checked: boolean) => {
-    const keys = new Set(rowSelection?.selectedRowKeys)
-    for (const row of rows) {
-      if (checked) keys.add(rowKey(row))
-      else keys.delete(rowKey(row))
-    }
-    emitSelection(keys)
-  }
+  const [sorting, setSorting] = useState<SortingState>([])
+  const tableColumns = useMemo<ColumnDef<T>[]>(
+    () =>
+      columns.map((column) => {
+        const dataIndex = column.dataIndex
+        const sorter = column.sorter
+        // sorter:true 只维护/回传服务端排序状态，当前页数据顺序由后端决定。
+        const sortingFn: SortingFn<T> =
+          typeof sorter === 'function'
+            ? (rowA, rowB) => sorter(rowA.original, rowB.original)
+            : () => 0
+        return {
+          id: column.key,
+          accessorFn: dataIndex ? (record) => record[dataIndex] : undefined,
+          enableSorting: Boolean(sorter),
+          sortDescFirst: false,
+          sortingFn,
+        }
+      }),
+    [columns],
+  )
+  const selectedRows = useMemo<RowSelectionState>(() => {
+    const selected: RowSelectionState = {}
+    for (const key of rowSelection?.selectedRowKeys ?? []) selected[key] = true
+    return selected
+  }, [rowSelection?.selectedRowKeys])
+  const paginationState: PaginationState = pagination
+    ? { pageIndex: Math.max(0, pagination.current - 1), pageSize: pagination.pageSize }
+    : { pageIndex: 0, pageSize: Math.max(1, dataSource.length) }
+  const manualPagination = Boolean(
+    // 后端分页只传当前页数据；有 total 且数据未超过一页时不得再次本地切片。
+    pagination && pagination.total !== undefined && dataSource.length <= pagination.pageSize,
+  )
+  // TanStack Table 实例包含不可安全 memoize 的函数，按其集成约定退出 React Compiler。
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const table = useReactTable({
+    data: dataSource,
+    columns: tableColumns,
+    getRowId: rowKey,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: pagination ? getPaginationRowModel() : undefined,
+    manualPagination,
+    pageCount: pagination ? Math.ceil(total / pagination.pageSize) : undefined,
+    enableRowSelection: Boolean(rowSelection),
+    state: {
+      sorting,
+      rowSelection: selectedRows,
+      pagination: paginationState,
+    },
+    onSortingChange: setSorting,
+    onRowSelectionChange: rowSelection
+      ? (updater) => {
+          const next = typeof updater === 'function' ? updater(selectedRows) : updater
+          const keys = Object.keys(next).filter((key) => next[key])
+          rowSelection.onChange(
+            keys,
+            dataSource.filter((record) => next[rowKey(record)]),
+          )
+        }
+      : undefined,
+  })
+  const rows = table.getRowModel().rows
 
   const cellPad = size === 'small' ? 'py-2' : undefined
   const colSpan = columns.length + (rowSelection ? 1 : 0)
@@ -266,17 +305,28 @@ export function Table<T>({
                 <TableHead className="w-10 pr-0">
                   <Checkbox
                     aria-label={t('common.selectAll')}
-                    checked={allChecked ? true : someChecked ? 'indeterminate' : false}
-                    onCheckedChange={(checked) => toggleAll(checked === true)}
+                    checked={
+                      table.getIsAllPageRowsSelected()
+                        ? true
+                        : table.getIsSomePageRowsSelected()
+                          ? 'indeterminate'
+                          : false
+                    }
+                    onCheckedChange={(checked) => table.toggleAllPageRowsSelected(checked === true)}
                   />
                 </TableHead>
               )}
               {columns.map((column) => {
-                const order = sort.key === column.key ? sort.order : null
+                const sortedColumn = sorting.find((item) => item.id === column.key)
+                const order: SortOrder = sortedColumn
+                  ? sortedColumn.desc
+                    ? 'descend'
+                    : 'ascend'
+                  : null
                 const cycleSort = () => {
                   const next: SortOrder =
                     order === 'ascend' ? 'descend' : order === 'descend' ? null : 'ascend'
-                  setSort({ key: column.key, order: next })
+                  setSorting(next ? [{ id: column.key, desc: next === 'descend' }] : [])
                   if (column.sorter === true) onSortChange?.(column.key, next)
                 }
                 return (
@@ -318,36 +368,31 @@ export function Table<T>({
               </TableRow>
             )}
             {rows.map((row, index) => {
-              const key = rowKey(row)
+              const record = row.original
               return (
                 <TableRow
-                  key={key}
-                  data-state={selected.has(key) ? 'selected' : undefined}
-                  onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  key={row.id}
+                  data-state={row.getIsSelected() ? 'selected' : undefined}
+                  onClick={onRowClick ? () => onRowClick(record) : undefined}
                 >
                   {rowSelection && (
                     <TableCell className={cn('w-10 pr-0', cellPad)}>
                       <Checkbox
                         aria-label={t('common.selectRow')}
-                        checked={selected.has(key)}
-                        onCheckedChange={(checked) => {
-                          const keys = new Set(rowSelection.selectedRowKeys)
-                          if (checked === true) keys.add(key)
-                          else keys.delete(key)
-                          emitSelection(keys)
-                        }}
+                        checked={row.getIsSelected()}
+                        onCheckedChange={(checked) => row.toggleSelected(checked === true)}
                         onClick={(event) => event.stopPropagation()}
                       />
                     </TableCell>
                   )}
                   {columns.map((column) => {
-                    const value = column.dataIndex ? row[column.dataIndex] : undefined
+                    const value = column.dataIndex ? record[column.dataIndex] : undefined
                     return (
                       <TableCell
                         key={column.key}
                         className={cn(ALIGN[column.align ?? 'left'], cellPad, column.className)}
                       >
-                        {column.render ? column.render(value, row, index) : (value as ReactNode)}
+                        {column.render ? column.render(value, record, index) : (value as ReactNode)}
                       </TableCell>
                     )
                   })}

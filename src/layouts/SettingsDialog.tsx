@@ -6,16 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Select, type SelectOption } from '@/components/ui/select'
 import { useThemeStore } from '@/core/theme/themeStore'
 import type { ThemePreference } from '@/core/theme/themeResolver'
 import { setLocale } from '@/core/i18n'
 import type { Locale } from '@/core/i18n/localeResolver'
-
-const localeOptions: SelectOption[] = [
-  { label: '简体中文', value: 'zh-CN' },
-  { label: 'English', value: 'en-US' },
-]
+import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 export function SettingsDialog({
   open,
@@ -28,12 +24,6 @@ export function SettingsDialog({
   const preference = useThemeStore((state) => state.preference)
   const setPreference = useThemeStore((state) => state.setPreference)
   const locale = i18n.language === 'en-US' ? 'en-US' : 'zh-CN'
-  const themeOptions: SelectOption[] = [
-    { label: t('settings.themeLight'), value: 'light' },
-    { label: t('settings.themeDark'), value: 'dark' },
-    { label: t('settings.themeSystem'), value: 'system' },
-  ]
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="settings-dialog">
@@ -41,30 +31,39 @@ export function SettingsDialog({
           <DialogTitle>{t('settings.title')}</DialogTitle>
           <DialogDescription>{t('settings.subtitle')}</DialogDescription>
         </DialogHeader>
-        <div className="settings-form">
-          <label className="settings-field">
-            <span className="settings-label">{t('settings.theme')}</span>
-            <Select
-              aria-label={t('settings.theme')}
-              options={themeOptions}
+        <FieldGroup className="mt-5">
+          <Field>
+            <FieldTitle id="settings-theme">{t('settings.theme')}</FieldTitle>
+            <ToggleGroup
+              aria-labelledby="settings-theme"
+              className="flex-wrap rounded-lg border border-[var(--border)] bg-[var(--bg)] p-1"
+              type="single"
               value={preference}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 if (value) setPreference(value as ThemePreference)
               }}
-            />
-          </label>
-          <label className="settings-field">
-            <span className="settings-label">{t('settings.language')}</span>
-            <Select
-              aria-label={t('settings.language')}
-              options={localeOptions}
+            >
+              <ToggleGroupItem value="light">{t('settings.themeLight')}</ToggleGroupItem>
+              <ToggleGroupItem value="dark">{t('settings.themeDark')}</ToggleGroupItem>
+              <ToggleGroupItem value="system">{t('settings.themeSystem')}</ToggleGroupItem>
+            </ToggleGroup>
+          </Field>
+          <Field>
+            <FieldTitle id="settings-language">{t('settings.language')}</FieldTitle>
+            <ToggleGroup
+              aria-labelledby="settings-language"
+              className="flex-wrap rounded-lg border border-[var(--border)] bg-[var(--bg)] p-1"
+              type="single"
               value={locale}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 if (value) void setLocale(value as Locale)
               }}
-            />
-          </label>
-        </div>
+            >
+              <ToggleGroupItem value="zh-CN">{t('settings.languageZhCn')}</ToggleGroupItem>
+              <ToggleGroupItem value="en-US">{t('settings.languageEnUs')}</ToggleGroupItem>
+            </ToggleGroup>
+          </Field>
+        </FieldGroup>
       </DialogContent>
     </Dialog>
   )

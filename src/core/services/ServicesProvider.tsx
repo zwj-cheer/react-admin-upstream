@@ -7,5 +7,5 @@ export function ServicesProvider({
   services,
   children,
 }: PropsWithChildren<{ services: Services }>) {
-  return <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>
+  return <ServicesContext value={services}>{children}</ServicesContext>
 }

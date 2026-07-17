@@ -3,34 +3,32 @@ import { useTranslation } from 'react-i18next'
 import { Icon } from '@/components/ui/icon'
 import { IconSprite } from '@/components/IconSprite'
 import { useAuthStore } from '@/core/auth/authStore'
-import { useRouteRegistry } from '@/core/routing'
-import { useMenus } from '@/modules/menus/queries'
-import { Avatar } from '@/components/ui/avatar'
+import type { ShellBranding } from '@/core/branding'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { AccountMenu } from './AccountMenu'
-import { getMenuNavigation } from './navigation'
-import type { ShellBranding } from './types'
+import type { ShellNavigationItem } from './types'
+import { cn } from '@/core/utils'
 
 export function Sidebar({
-  open,
+  className,
   onNavigate,
   branding,
   groupLabelKey,
+  navigation,
   showAccountMenu,
 }: {
-  open: boolean
+  className?: string
   onNavigate: () => void
   branding: ShellBranding
   groupLabelKey: string
+  navigation: readonly ShellNavigationItem[]
   showAccountMenu: boolean
 }) {
   const { t } = useTranslation()
   const session = useAuthStore((state) => state.session)
-  const routes = useRouteRegistry()
-  const menus = useMenus()
-  const navigation = getMenuNavigation(routes, session, menus.data ?? [])
 
   return (
-    <aside className={'app-sidebar' + (open ? ' is-open' : '')}>
+    <aside className={cn('app-sidebar', className)}>
       <div className="sidebar-header">
         <div className="sidebar-brand">
           <div className="brand-mark">{branding.shortName}</div>
@@ -66,11 +64,12 @@ export function Sidebar({
                 type="button"
                 aria-label={session?.user.name ?? t('a11y.userMenu')}
               >
-                <Avatar
-                  className="sidebar-avatar"
-                  name={session?.user.name}
-                  src={session?.user.avatarUrl}
-                />
+                <Avatar className="sidebar-avatar" aria-label={session?.user.name}>
+                  {session?.user.avatarUrl ? (
+                    <AvatarImage alt={session.user.name} src={session.user.avatarUrl} />
+                  ) : null}
+                  <AvatarFallback>{session?.user.name.slice(0, 1) ?? 'A'}</AvatarFallback>
+                </Avatar>
                 <div className="sidebar-user-copy">
                   <div className="sidebar-user-name">{session?.user.name}</div>
                   <div className="sidebar-user-meta">{session?.source.toUpperCase()}</div>

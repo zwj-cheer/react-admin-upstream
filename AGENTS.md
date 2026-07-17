@@ -4,11 +4,11 @@
 
 以下能力开关在**项目初始化时确定一次**，此后所有开发遵循固化值，不再重复询问：
 
-| 能力 | 当前值 | 说明 |
-| --- | --- | --- |
-| 国际化（zh-CN / en-US） | 必须 | 固定必须，不可关闭 |
-| 主题切换（light/dark/system） | 必须 | 固定必须，不可关闭 |
-| 移动端适配 | 需要 | 初始化时询问用户后固化 |
+| 能力                          | 当前值 | 说明                   |
+| ----------------------------- | ------ | ---------------------- |
+| 国际化（zh-CN / en-US）       | 必须   | 固定必须，不可关闭     |
+| 主题切换（light/dark/system） | 必须   | 固定必须，不可关闭     |
+| 移动端适配                    | 需要   | 初始化时询问用户后固化 |
 
 - 基于本模板初始化下游项目时，大模型必须**先询问用户是否需要移动端适配**，把答案写入上表
   后再开始开发，之后不得凭猜测偏离。
@@ -43,25 +43,28 @@
 需求已有封装的，一律复用；表里没有、确需新增的，按 `core-tool-registry` skill 登记回本表。
 带 ESLint 护栏的封装，绕开写散装实现会被 lint 直接拦下。
 
-| 需求 | 用这个 | 位置 | 护栏 |
-| --- | --- | --- | --- |
-| 日期/时间展示 | `formatDate` / `formatDateMinute` / `formatDateTime` / `formatTime` / `formatFromNow` | `@/core/datetime` | ✅ 禁散装 `Intl.DateTimeFormat` / `toLocaleDateString` / 直接 `dayjs` |
-| 权限判断 | `authorize` / `<Can>` / `capabilities` | `@/core/permissions` | — |
-| 路由元数据/菜单/守卫 | `RegisteredRoute` / `useRouteRegistry` / `useAuthorizedRoutes` | `@/core/routing` | — |
-| HTTP 请求（带 token/CSRF/401） | `HttpClient` + adapter | `@/core/http`、`@/adapters/rest` | — |
-| 主题（light/dark/system） | `useThemeStore` / `resolveThemePreference` | `@/core/theme` | — |
-| 国际化 | `useTranslation` / `setLocale` | `react-i18next`、`@/core/i18n` | — |
-| 认证会话 | `useAuthStore` / `useAuthService` | `@/core/auth` | — |
-| 运行时配置 | `useRuntimeConfig` / `parseRuntimeConfig` | `@/core/config` | — |
-| 数据表格（桌面/移动自适应） | `DataTable` | `@/components/common` | — |
-| 表格（antd 形态，范式参考） | `Table` 是两层重构的范式参考，暂无生产消费者；业务列表页一律用 `DataTable`（移动端卡片降级），勿直接消费高层 `Table` | `@/components/ui/table` | — |
-| 异步态（loading/error/empty） | `AsyncState` | `@/components/common` | — |
-| 二次确认弹窗 | `ConfirmDialog` | `@/components/common` | — |
-| className 合并 | `cn` | `@/core/utils` | — |
-| 基础 UI 组件（Button/Input/Select/Table…） | shadcn 形态组件 | `@/components/ui` | — |
+| 需求                                       | 用这个                                                                                                               | 位置                                                                 | 护栏                                                                  |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| 日期/时间展示                              | `formatDate` / `formatDateMinute` / `formatDateTime` / `formatTime` / `formatFromNow`                                | `@/core/datetime`                                                    | ✅ 禁散装 `Intl.DateTimeFormat` / `toLocaleDateString` / 直接 `dayjs` |
+| 权限判断                                   | `authorize` / `<Can>` / `capabilities`                                                                               | `@/core/permissions/{authorize,Can,capabilities}`                    | —                                                                     |
+| 路由元数据/菜单/守卫                       | `RegisteredRoute` / `useRouteRegistry` / `useAuthorizedRoutes`                                                       | `@/core/routing`                                                     | —                                                                     |
+| 列表搜索/分页 URL 状态                     | `parseListSearchParams` / `useListSearchParams`                                                                      | `@/core/routing`                                                     | —                                                                     |
+| 应用壳品牌展示模型                         | `ShellBranding`                                                                                                      | `@/core/branding`                                                    | —                                                                     |
+| HTTP 请求（带 token/CSRF/401）             | `HttpClient` + adapter                                                                                               | `@/core/http/client`、`@/adapters/rest`                              | —                                                                     |
+| 主题（light/dark/system）                  | `useThemeStore` / `resolveThemePreference`                                                                           | `@/core/theme/themeStore`、`@/core/theme/themeResolver`              | —                                                                     |
+| 国际化                                     | `useTranslation` / `setLocale`                                                                                       | `react-i18next`、`@/core/i18n`                                       | —                                                                     |
+| 认证会话                                   | `useAuthStore` / `useAuthService`                                                                                    | `@/core/auth/authStore`、`@/core/auth/AuthProvider`                  | —                                                                     |
+| 运行时配置                                 | `useRuntimeConfig` / `parseRuntimeConfig`                                                                            | `@/core/config/RuntimeConfigProvider`、`@/core/config/runtimeConfig` | —                                                                     |
+| 数据表格（桌面/移动自适应）                | `DataTable`                                                                                                          | `@/components/common`                                                | —                                                                     |
+| 表格（antd 形态，范式参考）                | `Table` 是两层重构的范式参考，暂无生产消费者；业务列表页一律用 `DataTable`（移动端卡片降级），勿直接消费高层 `Table` | `@/components/ui/table`                                              | —                                                                     |
+| 异步态（loading/error/empty）              | `AsyncState`                                                                                                         | `@/components/common`                                                | —                                                                     |
+| 二次确认弹窗                               | `ConfirmDialog`                                                                                                      | `@/components/common`                                                | —                                                                     |
+| className 合并                             | `cn`                                                                                                                 | `@/core/utils`                                                       | —                                                                     |
+| 基础 UI 组件（Button/Input/Select/Table…） | shadcn 形态组件                                                                                                      | `@/components/ui`                                                    | —                                                                     |
 
-> `@/core/*` 每个域都提供具名导出的 barrel `index.ts`（禁 `export *`，避免 Vercel skill 指出的
-> barrel 成本），配合编辑器 auto-import 即可被发现；写代码时优先按上表路径 import。
+> 只有需要被多个目录稳定复用的 core 域才提供具名导出的 barrel `index.ts`（禁 `export *`，
+> 避免无用公开 API 与 barrel 成本）；实现型子模块从具体文件导入，不为形式完整性创建 barrel。
+> 写代码时优先按上表路径 import，新增长期公共能力仍按 `core-tool-registry` skill 登记。
 
 ## 关键约定
 
@@ -93,8 +96,9 @@
 7. **写 E2E 前先在浏览器实际走通场景再下笔**，禁止凭想象编写选择器；locator/断言/mock 模式
    参照 `playwright-best-practices` skill。E2E 框架已定 Playwright，不引入 Cypress。
 8. **模板/项目边界**：`src/core`、`src/components`、`src/layouts`、`src/modules` 不能导入
-   `src/project/`（`scripts/check-extension-boundaries.mjs` 强制）；项目值只经 `src/app/`
-   注入。下游扩展只改 `src/project/` 与运行时 JSON。
+   `src/project/`；项目值只经 `src/app/` 注入。层级方向、循环依赖和生产代码误引测试文件由
+   `.dependency-cruiser.cjs` 通过 `pnpm check:architecture` 强制，并已接入 `pnpm verify`。
+   下游扩展只改 `src/project/` 与运行时 JSON。
 9. **提交走 husky pre-commit**（lint-staged：eslint --fix + prettier）。`pnpm lint` 和
    `pnpm build` 必须通过。
 10. **所有用户可见文案必须走 i18n**：禁止在组件中硬编码中文或英文字符串，一律通过

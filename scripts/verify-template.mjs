@@ -12,6 +12,7 @@ const forbidden = [
   /mock-csrf-token/,
   /react-admin-template\.mock-session/,
 ]
+const rawColorPattern = /#[\da-f]{3,8}\b|rgba?\(/i
 
 function collect(directory) {
   const files = []
@@ -53,6 +54,34 @@ for (const file of collect('src/core').concat(
   if (/['"]@\/project\//.test(readFileSync(file, 'utf8'))) {
     failures.push(file + ' imports a project-owned module')
   }
+}
+
+for (const file of collect('src')) {
+  if (!/\.(?:ts|tsx|css)$/.test(file) || file === 'src/styles/tokens.css') continue
+  if (rawColorPattern.test(readFileSync(file, 'utf8'))) {
+    failures.push(file + ' contains a raw color outside src/styles/tokens.css')
+  }
+}
+
+function collectTranslationKeys(value, prefix = '') {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return [prefix]
+  return Object.entries(value).flatMap(([key, child]) =>
+    collectTranslationKeys(child, prefix ? prefix + '.' + key : key),
+  )
+}
+
+const zhKeys = new Set(
+  collectTranslationKeys(JSON.parse(readFileSync('src/core/i18n/locales/zh-CN.json', 'utf8'))),
+)
+const enKeys = new Set(
+  collectTranslationKeys(JSON.parse(readFileSync('src/core/i18n/locales/en-US.json', 'utf8'))),
+)
+
+for (const key of zhKeys) {
+  if (!enKeys.has(key)) failures.push('en-US locale is missing key ' + key)
+}
+for (const key of enKeys) {
+  if (!zhKeys.has(key)) failures.push('zh-CN locale is missing key ' + key)
 }
 
 if (failures.length) {

@@ -79,12 +79,12 @@ export interface MenuInput {
 
 export interface AuthServiceContract {
   loginLocal(email: string, password: string): Promise<Session>
-  getSession(source: AuthSource): Promise<Session>
+  getSession(source: AuthSource, signal?: AbortSignal): Promise<Session>
   logout(source: AuthSource): Promise<void>
 }
 
 export interface UserServiceContract {
-  list(params?: ListParams): Promise<PageResult<User>>
+  list(params?: ListParams, signal?: AbortSignal): Promise<PageResult<User>>
   create(input: UserInput): Promise<User>
   update(id: string, input: UserInput): Promise<User>
   setStatus(id: string, status: EntityStatus): Promise<User>
@@ -92,7 +92,7 @@ export interface UserServiceContract {
 }
 
 export interface RoleServiceContract {
-  list(params?: ListParams): Promise<PageResult<Role>>
+  list(params?: ListParams, signal?: AbortSignal): Promise<PageResult<Role>>
   create(input: RoleInput): Promise<Role>
   update(id: string, input: RoleInput): Promise<Role>
   remove(id: string): Promise<void>
@@ -101,7 +101,7 @@ export interface RoleServiceContract {
 }
 
 export interface MenuServiceContract {
-  list(): Promise<MenuItem[]>
+  list(signal?: AbortSignal): Promise<MenuItem[]>
   create(input: MenuInput): Promise<MenuItem>
   update(id: string, input: MenuInput): Promise<MenuItem>
   remove(id: string): Promise<void>

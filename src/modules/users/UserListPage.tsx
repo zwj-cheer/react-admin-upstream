@@ -6,15 +6,22 @@ import type { User } from '@/core/services/contracts'
 import { formatDate } from '@/core/datetime'
 import { Can } from '@/core/permissions/Can'
 import { capabilities } from '@/core/permissions/capabilities'
+import { useListSearchParams } from '@/core/routing'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group'
 import { Switch } from '@/components/ui/switch'
 import { Tag } from '@/components/ui/tag'
 import { AsyncState } from '@/components/common/AsyncState'
 import { DataTable, type DataTableColumn } from '@/components/common/DataTable'
 import { Pagination } from '@/components/ui/pagination'
-import { useRoles } from '@/modules/roles/queries'
+import { ROLE_OPTIONS_PAGE_SIZE, useRoles } from '@/modules/roles/queries'
 import {
+  USER_LIST_PAGE_SIZE,
   useAssignUserRoles,
   useCreateUser,
   useSetUserStatus,
@@ -26,13 +33,12 @@ import { UserRoleDialog } from './UserRoleDialog'
 
 export function UserListPage() {
   const { t } = useTranslation()
-  const [query, setQuery] = useState('')
-  const [page, setPage] = useState(1)
+  const { query, page, setQuery, setPage } = useListSearchParams()
   const [formOpen, setFormOpen] = useState(false)
   const [roleOpen, setRoleOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User>()
-  const users = useUsers({ query, page, pageSize: 8 })
-  const roles = useRoles({ page: 1, pageSize: 100 })
+  const users = useUsers({ query, page, pageSize: USER_LIST_PAGE_SIZE })
+  const roles = useRoles({ page: 1, pageSize: ROLE_OPTIONS_PAGE_SIZE })
   const createUser = useCreateUser()
   const updateUser = useUpdateUser()
   const setStatus = useSetUserStatus()
@@ -126,17 +132,24 @@ export function UserListPage() {
     <section className="page-section">
       <div className="page-toolbar">
         <label className="toolbar-search">
-          <Input
-            allowClear
-            aria-label={t('common.search')}
-            placeholder={t('users.searchPlaceholder')}
-            prefix={<Icon name="search" size={16} />}
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value)
-              setPage(1)
-            }}
-          />
+          <InputGroup>
+            <InputGroupAddon>
+              <Icon name="search" size={16} />
+            </InputGroupAddon>
+            <InputGroupInput
+              aria-label={t('common.search')}
+              placeholder={t('users.searchPlaceholder')}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {query ? (
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton aria-label={t('common.clear')} onClick={() => setQuery('')}>
+                  <Icon name="x" size={14} />
+                </InputGroupButton>
+              </InputGroupAddon>
+            ) : null}
+          </InputGroup>
         </label>
         <Can capability={capabilities.users.create}>
           <Button
@@ -162,7 +175,7 @@ export function UserListPage() {
         <Pagination
           className="mt-4"
           current={users.data?.page ?? page}
-          pageSize={users.data?.pageSize ?? 8}
+          pageSize={users.data?.pageSize ?? USER_LIST_PAGE_SIZE}
           total={users.data?.total ?? 0}
           onChange={setPage}
         />

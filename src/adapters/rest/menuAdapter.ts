@@ -6,13 +6,24 @@ import type {
   MenuItem,
   MenuServiceContract,
 } from '@/core/services/contracts'
-import { menuSchema } from './schemas'
+
+export const menuSchema = z.object({
+  id: z.string().min(1),
+  parentId: z.string().nullable(),
+  name: z.string().min(1),
+  routeKey: z.string().min(1),
+  icon: z.string().min(1),
+  status: z.enum(['active', 'disabled']),
+  order: z.number().int(),
+})
+
+export type MenuResponse = z.infer<typeof menuSchema>
 
 export class RestMenuAdapter implements MenuServiceContract {
   constructor(private readonly client: HttpClient) {}
 
-  async list(): Promise<MenuItem[]> {
-    return z.array(menuSchema).parse(await this.client.request('/menus'))
+  async list(signal?: AbortSignal): Promise<MenuItem[]> {
+    return z.array(menuSchema).parse(await this.client.request('/menus', { signal }))
   }
 
   async create(input: MenuInput): Promise<MenuItem> {

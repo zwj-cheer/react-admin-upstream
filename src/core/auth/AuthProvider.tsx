@@ -1,20 +1,14 @@
-import { createContext, useContext, useEffect, type PropsWithChildren } from 'react'
+import { createContext, use, type PropsWithChildren } from 'react'
 import type { AuthService } from './authService'
 
 const AuthServiceContext = createContext<AuthService | null>(null)
 
 export function AuthProvider({ service, children }: PropsWithChildren<{ service: AuthService }>) {
-  useEffect(() => {
-    service.start()
-    void service.restore()
-    return () => service.stop()
-  }, [service])
-
-  return <AuthServiceContext.Provider value={service}>{children}</AuthServiceContext.Provider>
+  return <AuthServiceContext value={service}>{children}</AuthServiceContext>
 }
 
 export function useAuthService(): AuthService {
-  const service = useContext(AuthServiceContext)
+  const service = use(AuthServiceContext)
   if (!service) {
     throw new Error('AuthProvider is missing')
   }

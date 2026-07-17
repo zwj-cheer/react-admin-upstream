@@ -10,8 +10,8 @@ body,
 }
 
 body {
-  background: #f7f8fa;
-  color: #1f2937;
+  background: var(--bg);
+  color: var(--t1);
   font-family:
     'Geist',
     'Noto Sans SC',
@@ -20,25 +20,15 @@ body {
     sans-serif;
 }
 
-.dark body {
-  background: #0c1222;
-  color: #f1f5f9;
-}
-
 .bootstrap-error {
   width: min(560px, calc(100% - 32px));
   margin: 12vh auto;
   padding: 36px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+  background: var(--card);
+  box-shadow: var(--shadow-lg);
   text-align: center;
-}
-
-.dark .bootstrap-error {
-  border-color: #1e2d3d;
-  background: #151d2d;
 }
 
 .bootstrap-error__mark {
@@ -48,8 +38,8 @@ body {
   margin: 0 auto 20px;
   place-items: center;
   border-radius: 50%;
-  background: #fef2f2;
-  color: #ef4444;
+  background: var(--red-light);
+  color: var(--red);
   font-size: 24px;
   font-weight: 700;
 }
@@ -61,10 +51,10 @@ body {
 
 .bootstrap-error p {
   margin: 10px 0 18px;
-  color: #6b7280;
+  color: var(--t3);
   line-height: 1.6;
 }
 
 .bootstrap-error code {
-  color: #d97757;
+  color: var(--gold);
 }

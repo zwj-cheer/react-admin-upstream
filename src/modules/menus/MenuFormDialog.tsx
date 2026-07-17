@@ -6,7 +6,15 @@ import type { MenuItem } from '@/core/services/contracts'
 import { useRouteRegistry } from '@/core/routing'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, type SelectOption } from '@/components/ui/select'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Dialog,
   DialogContent,
@@ -17,6 +25,8 @@ import {
 } from '@/components/ui/dialog'
 import { menuFormSchema, type MenuFormValues } from './schema'
 import { flattenMenuTree, getDescendantIds } from './menuTree'
+
+const ROOT_MENU_VALUE = '__root__'
 
 export function MenuFormDialog({
   open,
@@ -67,62 +77,72 @@ export function MenuFormDialog({
             <DialogTitle>{t(menu ? 'menus.editTitle' : 'menus.newTitle')}</DialogTitle>
             <DialogDescription>{t('menus.subtitle')}</DialogDescription>
           </DialogHeader>
-          <div className="form-grid">
-            <label className="form-field">
-              <span className="form-label">{t('common.name')}</span>
-              <Input status={errors.name && 'error'} {...register('name')} />
-              {errors.name && <span className="form-error">{errors.name.message}</span>}
-            </label>
-            <label className="form-field">
-              <span className="form-label">{t('common.icon')}</span>
-              <Input status={errors.icon && 'error'} {...register('icon')} />
-              {errors.icon && <span className="form-error">{errors.icon.message}</span>}
-            </label>
-            <label className="form-field">
-              <span className="form-label">{t('common.route')}</span>
+          <FieldGroup className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+            <Field data-invalid={Boolean(errors.name)}>
+              <FieldLabel htmlFor="menu-name">{t('common.name')}</FieldLabel>
+              <Input id="menu-name" aria-invalid={Boolean(errors.name)} {...register('name')} />
+              <FieldError>{errors.name?.message ? t(errors.name.message) : null}</FieldError>
+            </Field>
+            <Field data-invalid={Boolean(errors.icon)}>
+              <FieldLabel htmlFor="menu-icon">{t('common.icon')}</FieldLabel>
+              <Input id="menu-icon" aria-invalid={Boolean(errors.icon)} {...register('icon')} />
+              <FieldError>{errors.icon?.message ? t(errors.icon.message) : null}</FieldError>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="menu-route">{t('common.route')}</FieldLabel>
               <Controller
                 control={control}
                 name="routeKey"
                 render={({ field }) => (
-                  <Select
-                    aria-label={t('common.route')}
-                    options={routes.map((route) => ({
-                      label: t(route.titleKey),
-                      value: route.key,
-                    }))}
-                    value={field.value}
-                    onChange={(value) => {
-                      if (value) field.onChange(value)
-                    }}
-                  />
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="menu-route" aria-label={t('common.route')}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {routes.map((route) => (
+                          <SelectItem key={route.key} value={route.key}>
+                            {t(route.titleKey)}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 )}
               />
-            </label>
-            <label className="form-field">
-              <span className="form-label">{t('common.parent')}</span>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="menu-parent">{t('common.parent')}</FieldLabel>
               <Controller
                 control={control}
                 name="parentId"
                 render={({ field }) => {
-                  const parentSelectOptions: SelectOption[] = [
-                    { label: t('common.rootMenu'), value: '' },
-                    ...parentOptions.map((item) => ({
-                      label: `${'—'.repeat(item.depth)} ${item.name}`.trim(),
-                      value: item.id,
-                    })),
-                  ]
                   return (
                     <Select
-                      aria-label={t('common.parent')}
-                      options={parentSelectOptions}
-                      value={field.value ?? ''}
-                      onChange={(value) => field.onChange(value || null)}
-                    />
+                      value={field.value ?? ROOT_MENU_VALUE}
+                      onValueChange={(value) =>
+                        field.onChange(value === ROOT_MENU_VALUE ? null : value)
+                      }
+                    >
+                      <SelectTrigger id="menu-parent" aria-label={t('common.parent')}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value={ROOT_MENU_VALUE}>{t('common.rootMenu')}</SelectItem>
+                          {parentOptions.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {`${'—'.repeat(item.depth)} ${item.name}`.trim()}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   )
                 }}
               />
-            </label>
-          </div>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
             <Button disabled={pending} type="submit" variant="primary">

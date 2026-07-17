@@ -11,7 +11,7 @@ export interface MockSessionStore {
   clear(): void
 }
 
-const STORAGE_KEY = 'react-admin-template.mock-session'
+const STORAGE_KEY = 'react-admin-template.mock-session:v1'
 
 export function createBrowserMockSessionStore(): MockSessionStore {
   return {

@@ -1,30 +1,36 @@
-import { useState, type ImgHTMLAttributes } from 'react'
+import type { ComponentProps } from 'react'
+import { Avatar as AvatarPrimitive } from 'radix-ui'
 import { cn } from '@/core/utils'
 
-export interface AvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
-  name?: string
-  src?: string
+export function Avatar({ className, ...props }: ComponentProps<typeof AvatarPrimitive.Root>) {
+  return (
+    <AvatarPrimitive.Root
+      data-slot="avatar"
+      className={cn('relative flex shrink-0 overflow-hidden rounded-full', className)}
+      {...props}
+    />
+  )
 }
 
-export function Avatar({ name, src, className, ...props }: AvatarProps) {
-  const [failed, setFailed] = useState(false)
-  const initial = name?.slice(0, 1) ?? 'A'
-
-  if (src && !failed) {
-    return (
-      <img
-        className={cn('object-cover', className)}
-        src={src}
-        alt={name ?? ''}
-        onError={() => setFailed(true)}
-        {...props}
-      />
-    )
-  }
-
+export function AvatarImage({ className, ...props }: ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
-    <div className={className} aria-label={name ?? undefined} {...props}>
-      {initial}
-    </div>
+    <AvatarPrimitive.Image
+      data-slot="avatar-image"
+      className={cn('aspect-square size-full object-cover', className)}
+      {...props}
+    />
+  )
+}
+
+export function AvatarFallback({
+  className,
+  ...props
+}: ComponentProps<typeof AvatarPrimitive.Fallback>) {
+  return (
+    <AvatarPrimitive.Fallback
+      data-slot="avatar-fallback"
+      className={cn('flex size-full items-center justify-center', className)}
+      {...props}
+    />
   )
 }

@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type { HttpClient } from '@/core/http/client'
 import type {
   EntityStatus,
@@ -7,17 +8,28 @@ import type {
   UserInput,
   UserServiceContract,
 } from '@/core/services/contracts'
-import { pageSchema, userSchema } from './schemas'
+import { pageSchema } from './schemas'
+
+export const userSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  email: z.string().email(),
+  status: z.enum(['active', 'disabled']),
+  roleIds: z.array(z.string()),
+  createdAt: z.string().datetime(),
+})
+
+export type UserResponse = z.infer<typeof userSchema>
 
 export class RestUserAdapter implements UserServiceContract {
   constructor(private readonly client: HttpClient) {}
 
-  async list(params: ListParams = {}): Promise<PageResult<User>> {
+  async list(params: ListParams = {}, signal?: AbortSignal): Promise<PageResult<User>> {
     const query = new URLSearchParams()
     if (params.query) query.set('query', params.query)
     query.set('page', String(params.page ?? 1))
     query.set('pageSize', String(params.pageSize ?? 10))
-    return pageSchema(userSchema).parse(await this.client.request('/users?' + query))
+    return pageSchema(userSchema).parse(await this.client.request('/users?' + query, { signal }))
   }
 
   async create(input: UserInput): Promise<User> {
